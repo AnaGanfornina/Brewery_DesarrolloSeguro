@@ -28,6 +28,11 @@ final class NetworkBreweries: NetworkBreweriesProtocol{
         // Call to server
         do {
             let (data, response) = try await URLSession.shared.data(for: request) //TODO: Cambiar por el share nuestro
+            if let resp = response as? HTTPURLResponse {
+                if resp.statusCode == HttpResponseCodes.SUCCESS {
+                    modelReturn = try! JSONDecoder().decode([Brewery].self, from: data)
+                }
+            }
         } catch {
             //TODO: Tratar error
             NSLog("Error calling NetworkBreweries")
@@ -76,7 +81,5 @@ final class NetworkBreweriesMock: NetworkBreweriesProtocol{
             street: "14 Blvd de l'Europe")
         
         return [model1, model2]
-    }
-    
-    
+    }   
 }

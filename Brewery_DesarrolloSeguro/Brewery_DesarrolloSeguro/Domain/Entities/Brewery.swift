@@ -12,19 +12,19 @@ struct Brewery: Codable, Identifiable {
     let id: String
     let name: String
     let breweryType: String
-    let address1: String
+    let address1: String?
     let address2: String?
     let address3: String?
     let city: String
     let stateProvince: String
     let postalCode: String
     let country: String
-    let longitude: Double
-    let latitude: Double
-    let phone: String
-    let websiteURL: String
+    let longitude: Double?
+    let latitude: Double?
+    let phone: String?
+    let websiteURL: String?
     let state: String
-    let street: String
+    let street: String?
 
     enum CodingKeys: String, CodingKey {
         case id, name, city, country, longitude, latitude, phone, state, street

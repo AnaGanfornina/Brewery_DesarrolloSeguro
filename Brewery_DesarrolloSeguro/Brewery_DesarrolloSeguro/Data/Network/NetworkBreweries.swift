@@ -34,6 +34,49 @@ final class NetworkBreweries: NetworkBreweriesProtocol{
         }
         return modelReturn
     }
+}
+// MARK: - NetworkBreweries Mock
+
+final class NetworkBreweriesMock: NetworkBreweriesProtocol{
+    func getBreweries() async -> [Brewery] {
+        let model1 = Brewery(
+            id: "701239cb-5319-4d2e-92c1-129ab0b3b440",
+            name: "Bière de la Plaine Mock",
+            breweryType: "micro",
+            address1: "16 Rue Saint Pierre",
+            address2: nil,
+            address3: nil,
+            city: "Marseille",
+            stateProvince: "Bouche du Rhône",
+            postalCode: "13006",
+            country: "France",
+            longitude: 5.38767154,
+            latitude: 43.29366192,
+            phone: "491473254",
+            websiteURL: "https://brasseriedelaplaine.fr/",
+            state: "Bouche du Rhône",
+            street: "16 Rue Saint Pierre")
+        
+        let model2 = Brewery(
+            id: "ac41870a-13d1-446c-80e4-6cb4570f5fbb",
+            name: "La Minotte Mock",
+            breweryType: "micro",
+            address1: "14 Blvd de l'Europe",
+            address2: nil,
+            address3: nil,
+            city:"Vitrolles",
+            stateProvince: "Bouche du Rhône",
+            postalCode: "13127",
+            country: "France",
+            longitude: 5.24158474,
+            latitude: 43.43965026,
+            phone: "465948644",
+            websiteURL: "https://www.minot-brasserie.fr/",
+            state: "Bouche du Rhône",
+            street: "14 Blvd de l'Europe")
+        
+        return [model1, model2]
+    }
     
     
 }

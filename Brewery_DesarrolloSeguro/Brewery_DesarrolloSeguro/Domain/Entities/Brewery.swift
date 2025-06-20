@@ -8,7 +8,7 @@
 
 import Foundation
 
-class Brewery: Codable, Identifiable {
+struct Brewery: Codable, Identifiable {
     let id: String
     let name: String
     let breweryType: String

@@ -9,5 +9,5 @@ import Foundation
 
 public struct ConstantsApp {
     //TODO: API URL al servidor. (Ojo deberiamos usar CritoKit para ocultar la URL).
-    public static let CONST_API_URL = "https://dragonball.keepcoding.education/api"
+    public static let CONST_API_URL = "https://api.openbrewerydb.org/v1/breweries"
 }

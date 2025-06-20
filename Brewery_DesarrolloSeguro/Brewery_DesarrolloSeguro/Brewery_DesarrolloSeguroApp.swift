@@ -11,7 +11,7 @@ import SwiftUI
 struct Brewery_DesarrolloSeguroApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            BreweriesView(viewModel: BreweryViewModel(useCase: BreweriesUseCase()))
         }
     }
 }

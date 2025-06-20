@@ -8,11 +8,24 @@
 import SwiftUI
 
 struct BreweriesView: View {
+    @State var viewModel: BreweryViewModel
+
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        // lista de cervecería
+        List {
+            ForEach(viewModel.beweryData){ bewery in
+                NavigationLink {
+                    // Destination
+                } label: {
+                    Text(bewery.name)
+                }
+                
+            }
+        }
     }
 }
 
 #Preview {
-    BreweriesView()
+    BreweriesView(viewModel: BreweryViewModel(useCase: BreweriesUseCaseMock()))
 }

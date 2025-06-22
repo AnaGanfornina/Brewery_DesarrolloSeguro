@@ -9,7 +9,7 @@ import Foundation
 import CryptoKit
 
 final class SSLPinningDelegate: NSObject{
-    private var localPublicKeyHashBase64 = "u4lDv3Ytpm/BHr9z271H4I29orWATvWy/CCZq3Aqj3E="
+    private var localPublicKeyHashBase64 = ""
     
     override init(){
         let dataPK: [UInt8] =

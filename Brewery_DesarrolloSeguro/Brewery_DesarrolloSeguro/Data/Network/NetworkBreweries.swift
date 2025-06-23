@@ -16,7 +16,11 @@ final class NetworkBreweries: NetworkBreweriesProtocol{
     func getBreweries() async -> [Brewery] {
         var modelReturn = [Brewery]()
         
-        let urlCad = "\(ConstantsApp.CONST_API_URL)"
+        guard let urlCad = String(data: Data(ConstantsApp.CONST_API_URL), encoding: .utf8) else {
+            print("NetworkBreweries Error: unwrappederror CONST_API_URL")
+            return []
+        }
+        
         guard let url = URL(string: urlCad) else {
             NSLog("Error: URL mal formada") // TODO: Tratar error
             return []

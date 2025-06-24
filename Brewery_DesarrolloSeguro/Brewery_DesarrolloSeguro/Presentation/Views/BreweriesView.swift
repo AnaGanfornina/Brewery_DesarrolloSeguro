@@ -23,6 +23,11 @@ struct BreweriesView: View {
                 
             }
         }
+        .refreshable {
+            Task{
+                await viewModel.getBreweries()
+            }
+        }
     }
 }
 

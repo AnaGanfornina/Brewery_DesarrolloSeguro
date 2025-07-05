@@ -25,9 +25,10 @@ struct Brewery: Codable, Identifiable {
     let websiteURL: String?
     let state: String
     let street: String?
+    let favorite: Bool
 
     enum CodingKeys: String, CodingKey {
-        case id, name, city, country, longitude, latitude, phone, state, street
+        case id, name, city, country, longitude, latitude, phone, state, street, favorite
         case breweryType = "brewery_type"
         case address1 = "address_1"
         case address2 = "address_2"

@@ -26,6 +26,17 @@ struct BreweriesView: View {
                         // Destination
                     } label: {
                         Text(bewery.name)
+                            .swipeActions(edge:.trailing, allowsFullSwipe: false) {
+                                Button {
+                                    // action
+                                    // TODO:  Marcar como favorito
+                                    print("Es favorito")
+                                } label: {
+                                    Label("Favorite", systemImage: "heart.fill")
+                                }
+                                .tint(.red)
+
+                            }
                     }
                     
                 }

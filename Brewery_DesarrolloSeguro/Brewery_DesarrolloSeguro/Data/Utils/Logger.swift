@@ -23,4 +23,28 @@ class AppLogger {
         }
         return logger
     }
+    
+    // TODO:  CREAR RESTO DE FUNCIONES (INFO, ERROR...)
+    
+    static func debug(_ message: String, withSensitiveValues sensitiveValues: [String: String]? = nil, inFile file: StaticString = #file, andFunction function: StaticString = #function, onLine line: UInt = #line) {
+        // file = toda la ruta + RemoteDataSourceImpl.swift
+        let filename: NSString = ("\(file)" as NSString).lastPathComponent as NSString // Ejemplo Filename = RemoteDataSourceImpl.swift
+        let category = filename.deletingPathExtension // Category = RemoteDataSourceImpl
+        let logger = getLogger(category: category) // Le pasamos la categoría al logger
+        
+        let logMessage = "🔍 \(message)"
+        
+        if let sensitiveValues = sensitiveValues {
+            logger.debug("\(logMessage) with sensitive values --> in \(function) on \(line)")
+            // Reemplazar cada valor sensible
+            for (key, value) in sensitiveValues {
+                logger.debug("--> \(key): \(value, privacy: .sensitive(mask: .hash))")
+            }
+        } else {
+            logger.debug("\(logMessage) --> in \(function) on \(line)")
+        }
+    }
 }
+
+
+

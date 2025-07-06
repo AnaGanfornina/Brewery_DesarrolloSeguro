@@ -25,10 +25,12 @@ final class AppState {
     }
     
     func closeSessionUser(){
-        Task{
-            //TODO: Borrar del keychain la lista de favoritos
-            self.status = .none
-        }
+        
+        //TODO: Borrar del keychain la lista de favoritos
+        KeychainHelper.keychain.deleteBrewery()
+        self.status = .none
+            
+        
     }
     
 }

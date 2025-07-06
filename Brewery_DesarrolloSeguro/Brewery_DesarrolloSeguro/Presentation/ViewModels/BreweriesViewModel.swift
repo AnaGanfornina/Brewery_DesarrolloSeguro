@@ -28,7 +28,22 @@ final class BreweryViewModel{
     
     @MainActor
     func getBreweries() async {
-        let data = await useCase.getBreweries()
-        self.beweryData = data
+        
+        // Comprobar si los datos están en el keychain // TODO: Probar a meterlo en un do catch
+        if KeychainHelper.keychain.readBreweryes() == nil{
+            
+            let data = await useCase.getBreweries()
+            KeychainHelper.keychain.saveBreweryes(data)
+            
+        }
+        // Leer los datos de keychain 
+        if let savedBreweryes = KeychainHelper.keychain.readBreweryes() {
+            self.beweryData = savedBreweryes
+        }
+
+        
+        
+    
+        
     }
 }

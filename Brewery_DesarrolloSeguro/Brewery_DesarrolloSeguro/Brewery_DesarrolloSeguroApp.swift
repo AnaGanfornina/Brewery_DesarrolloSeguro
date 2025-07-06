@@ -12,6 +12,7 @@ struct Brewery_DesarrolloSeguroApp: App {
     var body: some Scene {
         WindowGroup {
             BreweriesView(viewModel: BreweryViewModel(useCase: BreweriesUseCase()))
+                .environment(AppState())
         }
     }
 }

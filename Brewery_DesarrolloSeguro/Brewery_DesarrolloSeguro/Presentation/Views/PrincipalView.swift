@@ -8,15 +8,22 @@
 import SwiftUI
 
 struct PrincipalView: View {
+    
+    @State var viewModel: BreweryViewModel
+    
+    init(viewModel: BreweryViewModel = BreweryViewModel()){
+        self.viewModel = viewModel
+    }
+    
     var body: some View {
         TabView{
-            BreweriesView(viewModel: BreweryViewModel()) // TODO: Quitar la inyección
+            BreweriesView(viewModel: $viewModel)
                 .tabItem {
                     Image(systemName: "house")
                     Text("Home")
                 }
             
-            FavoritesView()
+            FavoritesView(viewModel: $viewModel)
             .tabItem {
                 Image(systemName: "heart.fill")
                 Text("Favorites")

@@ -1,8 +1,8 @@
 //
-//  BreweriesViewModel.swift
+//  BreweryViewModel.swift
 //  Brewery_DesarrolloSeguro
 //
-//  Created by Ana on 20/6/25.
+//  Created by Ana on 11/7/25.
 //
 
 import Foundation
@@ -12,6 +12,7 @@ import Combine
 final class BreweryViewModel{
     //publicadores
     var beweryData = [Brewery]()
+    var favoritesBeweryes : [Brewery] = []
     
     @ObservationIgnored
     private var useCase: BreweriesUseCaseProtocol
@@ -24,6 +25,9 @@ final class BreweryViewModel{
         Task{
             await self.getBreweries()
         }
+        self.getFavoriteBreweries()
+        
+        
     }
     
     @MainActor
@@ -32,7 +36,15 @@ final class BreweryViewModel{
             self.beweryData =  await useCase.getBreweries()
             
         }
+    }
     
+    func addFavorite(_ brewery: Brewery){
+        useCase.addFavorites(brewery)
+        getFavoriteBreweries()
         
+    }
+    
+    func getFavoriteBreweries() {
+        self.favoritesBeweryes = useCase.getFavoriteBreweries()
     }
 }

@@ -8,11 +8,30 @@
 import SwiftUI
 
 struct FavoritesView: View {
+    @Environment(AppState.self) var appState
+   
+    @Binding var viewModel: BreweryViewModel
     var body: some View {
-        Text("Aquí la lista de favoritos")
+        
+        
+        List{
+            ForEach(viewModel.favoritesBeweryes){ favorite in
+                Text(favorite.name)
+            }
+        }
+        .onAppear {
+            viewModel.getFavoriteBreweries()
+        }
+        .refreshable {
+            viewModel.getFavoriteBreweries()
+        }
     }
 }
 
 #Preview {
-    FavoritesView()
+    
+    FavoritesView(viewModel: .constant(BreweryViewModel(useCase: BreweriesUseCaseMock())))
+        .environment(AppState())
+    
+    
 }

@@ -33,11 +33,12 @@ final class KeychainHelper {
             print("Error: could not read Breweryes from keychain")
             return nil
         }
-        
+        // TODO: Falla porque espera un array y solo recibe un brewery.
         guard let breweryes = try? JSONDecoder().decode([Brewery].self, from: breweryesData) else {
             return nil
         }
         return breweryes
+        
     }
     
     func deleteBrewery(){
@@ -46,7 +47,7 @@ final class KeychainHelper {
     
     // MARK: - Favorites functions
     
-    func saveFavoritesBreweryes(_ favorite: [Brewery]){
+    func saveFavoritesBrewery(_ favorite: Brewery){
         guard let favoriteData = try? JSONEncoder().encode(favorite) else {
             print("Error: could not convert favorite to Data")
             return
@@ -63,6 +64,7 @@ final class KeychainHelper {
         }
         
         guard let favoriteBreweryes = try? JSONDecoder().decode([Brewery].self, from: favoriteData) else {
+            AppLogger.debug("Error: could not decode favorite to Data")
             return nil
         }
         return favoriteBreweryes

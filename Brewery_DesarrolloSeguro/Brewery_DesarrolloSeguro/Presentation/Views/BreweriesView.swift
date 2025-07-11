@@ -9,14 +9,10 @@ import SwiftUI
 
 struct BreweriesView: View {
     @Environment(AppState.self) var appState
-    @State var viewModel: BreweryViewModel
     
-    
-    init(viewModel: BreweryViewModel = BreweryViewModel()){
-        self.viewModel = viewModel
-    }
-    
-    
+    @Binding var viewModel: BreweryViewModel
+  
+  
     var body: some View {
         // lista de cervecería
         NavigationStack {
@@ -29,8 +25,9 @@ struct BreweriesView: View {
                             .swipeActions(edge:.trailing, allowsFullSwipe: false) {
                                 Button {
                                     // action
-                                    // TODO:  Marcar como favorito
-                                    print("Es favorito")
+                                    viewModel.addFavorite(bewery)
+                                    AppLogger.debug("Info: es favorito")
+                                    
                                 } label: {
                                     Label("Favorite", systemImage: "heart.fill")
                                 }
@@ -62,6 +59,6 @@ struct BreweriesView: View {
 }
 
 #Preview {
-    BreweriesView(viewModel: BreweryViewModel(useCase: BreweriesUseCaseMock()))
+    BreweriesView(viewModel: .constant(BreweryViewModel(useCase: BreweriesUseCaseMock())))
         .environment(AppState())
 }

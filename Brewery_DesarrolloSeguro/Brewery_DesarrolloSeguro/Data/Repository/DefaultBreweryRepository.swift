@@ -35,23 +35,22 @@ final class BreweryRepository: BreweryRepositoryProtocol {
     
     }
     /// Función para devolver favoritos
-    func getFavoriteBreweries() -> [Brewery] {
-        // Comprobar si hay favoritos están en el keychain
-        guard let favoritesBreweries = KeychainHelper.keychain.readFavoritseBreweryes() else {
-            AppLogger.debug("Error: Failed to read data from the Keychain.")
+    func getFavoriteBreweries() -> [String] {
+        // Comprobar si hay favoritos están en userDefault
+        guard let favoritesBreweries = UserDefaultsHelper.defaults.readFavorites() else {
+            AppLogger.debug("Error: Failed to read data from the UserDefault.")
             return []
         }
+        
+        
     
         return favoritesBreweries
     }
     
     func addFavorite(_ brewery: Brewery) {
-        KeychainHelper.keychain.saveFavoritesBrewery(brewery)
+        UserDefaultsHelper.defaults.save(brewery.id)
         
         AppLogger.debug("\(brewery.name) brewery has been added")
-        
-        
-        
     }
 }
 
@@ -83,17 +82,17 @@ final class BreweryRepositoryMock: BreweryRepositoryProtocol {
  
         return savedBreweryes
     }
-    func addFavorites(_ breweryes: [Brewery]) {
+    func addFavorite(_ brewery: Brewery) {
         
-        KeychainHelper.keychain.saveFavoritesBreweryes(breweryes)
-        for brewery in breweryes{
-            AppLogger.debug("\(brewery.name) brewery has been added")
-        }
+        UserDefaultsHelper.defaults.save(brewery.id)
+
+        AppLogger.debug("\(brewery.name) brewery has been added")
+        
         
         
     }
     /// Función para devolver favoritos
-    func getFavoriteBreweries() -> [Brewery] {
+    func getFavoriteBreweries() -> [String] {
         let model1 = Brewery(
             id: "701239cb-5319-4d2e-92c1-129ab0b3b440",
             name: "Bière de la Plaine Mock Favorite",
@@ -130,10 +129,11 @@ final class BreweryRepositoryMock: BreweryRepositoryProtocol {
             state: "Bouche du Rhône",
             street: "14 Blvd de l'Europe")
         
-        KeychainHelper.keychain.saveFavoritesBreweryes([model1, model2])
+        UserDefaultsHelper.defaults.save(model1.id)
+        UserDefaultsHelper.defaults.save(model2.id)
             
-        // Comprobar si hay favoritos están en el keychain
-        guard let favoritesBreweries = KeychainHelper.keychain.readFavoritseBreweryes() else {
+        // Comprobar si hay favoritos están en userDefault
+        guard let favoritesBreweries = UserDefaultsHelper.defaults.readFavorites() else {
             AppLogger.debug("Error: Failed to read data from the Keychain.")
             return []
         }

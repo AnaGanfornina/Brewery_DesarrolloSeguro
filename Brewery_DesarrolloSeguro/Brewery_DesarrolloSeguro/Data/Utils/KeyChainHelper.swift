@@ -45,35 +45,6 @@ final class KeychainHelper {
         delete(account: "Breweryes")
     }
     
-    // MARK: - Favorites functions
-    
-    func saveFavoritesBrewery(_ favorite: Brewery){
-        guard let favoriteData = try? JSONEncoder().encode(favorite) else {
-            print("Error: could not convert favorite to Data")
-            return
-        }
-        
-        save(data: favoriteData, account: "favoriteBrewery")
-        
-    }
-    
-    func readFavoritseBreweryes() -> [Brewery]?{
-        guard let favoriteData = read(account: "favoriteBrewery") else {
-            print("Error: could not read favorites Breweryes from keychain")
-            return nil
-        }
-        
-        guard let favoriteBreweryes = try? JSONDecoder().decode([Brewery].self, from: favoriteData) else {
-            AppLogger.debug("Error: could not decode favorite to Data")
-            return nil
-        }
-        return favoriteBreweryes
-    }
-    
-    func deleteFavoriteBrewery(){
-        delete(account: "favoriteBrewery")
-    }
-    
     
     
     // Save data

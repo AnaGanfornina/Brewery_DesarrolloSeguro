@@ -11,8 +11,8 @@ protocol BreweriesUseCaseProtocol {
     var repo: BreweryRepositoryProtocol{get set}
     
     func getBreweries() async -> [Brewery]
-    func addFavorites(_ brewery: Brewery)
-    func getFavoriteBreweries() -> [Brewery]
+    func addFavorite(_ brewery: Brewery)
+    func getFavoriteBreweries() -> [String]
     
 }
 
@@ -28,11 +28,12 @@ final class BreweriesUseCase: BreweriesUseCaseProtocol{
     func getBreweries() async -> [Brewery] {
         await repo.getBreweries()
     }
+    
     func addFavorite(_ brewery: Brewery) {
-        repo.addFavorites(brewery)
+        repo.addFavorite(brewery)
     }
     
-    func getFavoriteBreweries() -> [Brewery] {
+    func getFavoriteBreweries() -> [String] {
         repo.getFavoriteBreweries()
     }
     
@@ -53,10 +54,10 @@ final class BreweriesUseCaseMock: BreweriesUseCaseProtocol{
     }
     
     func addFavorite(_ brewery: Brewery) {
-        repo.addFavorites(brewery)
+        repo.addFavorite(brewery)
     }
     
-    func getFavoriteBreweries() -> [Brewery] {
+    func getFavoriteBreweries() -> [String] {
         repo.getFavoriteBreweries()
     }
     

@@ -15,8 +15,8 @@ struct FavoritesView: View {
         
         
         List{
-            ForEach(viewModel.favoritesBeweryes){ favorite in
-                Text(favorite.name)
+            ForEach(viewModel.favoritesBeweryes, id: \.self){ favorite in
+                Text(favorite)
             }
         }
         .onAppear {

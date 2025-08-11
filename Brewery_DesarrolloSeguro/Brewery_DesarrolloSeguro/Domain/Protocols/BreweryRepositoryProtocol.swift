@@ -9,6 +9,7 @@ import Foundation
 
 protocol BreweryRepositoryProtocol {
     func getBreweries() async -> [Brewery]
-    func addFavorite(_ brewery: Brewery) 
-    func getFavoriteBreweries() -> [String] 
+    func addFavorite(_ brewery: Brewery)
+    func deleteFavorite(_ brewery: Brewery) 
+    func getFavoriteBreweries() -> [Brewery]
 }

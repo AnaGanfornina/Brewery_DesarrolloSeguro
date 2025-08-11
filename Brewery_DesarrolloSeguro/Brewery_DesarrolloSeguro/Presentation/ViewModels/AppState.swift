@@ -26,8 +26,8 @@ final class AppState {
     
     func closeSessionUser(){
         
-        //TODO: Borrar del keychain la lista de favoritos
         KeychainHelper.keychain.deleteBrewery()
+        UserDefaultsHelper.defaults.deleteFavorites()
         self.status = .none
             
         

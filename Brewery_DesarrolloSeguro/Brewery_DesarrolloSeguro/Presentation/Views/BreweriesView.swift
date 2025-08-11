@@ -11,52 +11,58 @@ struct BreweriesView: View {
     @Environment(AppState.self) var appState
     
     @Binding var viewModel: BreweryViewModel
+    @State var brewerySelected: Brewery?
   
   
     var body: some View {
         // lista de cervecería
         NavigationStack {
             List {
-                ForEach(viewModel.beweryData){ bewery in
-                    NavigationLink {
-                        // Destination
-                    } label: {
-                        Text(bewery.name)
-                            .swipeActions(edge:.trailing, allowsFullSwipe: false) {
-                                Button {
-                                    // action
-                                    viewModel.addFavorite(bewery)
-                                    AppLogger.debug("Info: es favorito")
-                                    
-                                } label: {
-                                    Label("Favorite", systemImage: "heart.fill")
-                                }
-                                .tint(.red)
-
+                ForEach(viewModel.beweryData){ brewery in
+                    Text(brewery.name)
+                        .onTapGesture {
+                            // Destination
+                            brewerySelected = brewery
+                        }
+                    
+                        .swipeActions(edge:.trailing, allowsFullSwipe: false) {
+                            Button {
+                                // action
+                                viewModel.addFavorite(brewery)
+                                AppLogger.debug("Info: es favorito")
+                                
+                            } label: {
+                                Label("Favorite", systemImage: "heart.fill")
                             }
-                    }
-                    
-                }
+                            .tint(.red)
+                            
+                        }
+                }//ForEach
+            }//List
+        }
+        .refreshable {
+            Task{
+                await viewModel.getBreweries()
             }
-            .refreshable {
-                Task{
-                    await viewModel.getBreweries()
+        }
+        .toolbar{
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    //Action here
+                    appState.closeSessionUser()
+                } label: {
+                    Label("Close", systemImage: "power")
                 }
+                
             }
-            .toolbar{
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        //Action here
-                        appState.closeSessionUser()
-                    } label: {
-                        Label("Close", systemImage: "power")
-                    }
-                    
-                }
-            }
-        }//Navigation
-    }
+        }
+        // Modal
+        .sheet(item: $brewerySelected) { brewery in
+            BrewerieDetail(viewModel: $viewModel, brewerySelected: brewery)
+        }
+    }//Navigation
 }
+
 
 #Preview {
     BreweriesView(viewModel: .constant(BreweryViewModel(useCase: BreweriesUseCaseMock())))

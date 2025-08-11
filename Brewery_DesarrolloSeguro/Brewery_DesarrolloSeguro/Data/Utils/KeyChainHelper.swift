@@ -6,11 +6,13 @@
 //
 
 import Foundation
+import CryptoKit
 
 
 final class KeychainHelper {
     
     static let keychain = KeychainHelper()
+    private let keyTest = "PruebaDeClave"
     
     private init() {}
 // TODO: - Revisar
@@ -30,15 +32,26 @@ final class KeychainHelper {
     
     func readBreweryes() -> [Brewery]?{
         guard let breweryesData = read(account: "Breweryes") else {
-            print("Error: could not read Breweryes from keychain")
+            AppLogger.debug("Error: could not read Breweryes from keychain")
             return nil
         }
-        // TODO: Falla porque espera un array y solo recibe un brewery.
+
         guard let breweryes = try? JSONDecoder().decode([Brewery].self, from: breweryesData) else {
             return nil
         }
         return breweryes
         
+    }
+    
+    func searchBreweryes(_ favorites: [String]) -> [Brewery]?{
+        
+        guard let breweryesData = self.readBreweryes() else {
+            return nil
+        }
+        let favoritesFiltered = breweryesData.filter { favorites.contains($0.id) }
+        
+        
+        return favoritesFiltered
     }
     
     func deleteBrewery(){
@@ -47,7 +60,7 @@ final class KeychainHelper {
     
     
     
-    // Save data
+    // MARK: - Save data Keychain
     private func save(data: Data, service: String = "AGBrewery", account: String) {
         // Crear la query
         let query = [
@@ -91,7 +104,7 @@ final class KeychainHelper {
         SecItemCopyMatching(query, &result) // TODO: Tratar posibles errores de autentificación con faceID
         
         guard let dataResult = result as? Data else {
-            print("Error: error converted data")
+            AppLogger.debug("Error: error converted data")
             return nil
         }
         
@@ -111,4 +124,79 @@ final class KeychainHelper {
         AppLogger.debug("Se han borrado los datos. Status:\(status)")
     }
     
+    // MARK: - Save key Keychain
+    private func saveKey(data: SymmetricKey, service: String = "AGBrewery", account: String) {
+        // Crear la query
+        let query = [
+            kSecValueData: data,
+            kSecClass: kSecClassKey,
+            kSecAttrService: service,
+            kSecAttrAccount: account
+        ] as CFDictionary
+        
+        let status = SecItemAdd(query, nil)
+        
+
+        // errSecDuplicateltem -> actualizar
+        if status == errSecDuplicateItem {
+            // Crear la query para actualizar el item
+            let queryToUpdate = [
+                kSecClass: kSecClassGenericPassword,
+                kSecAttrService: service,
+                kSecAttrAccount: account
+            ] as CFDictionary
+            
+            let attributesToUpdate = [kSecValueData: data] as CFDictionary
+            
+            SecItemUpdate(queryToUpdate, attributesToUpdate)
+        } else if status != errSecSuccess { // errSecSuccess
+            print("Error: error adding item")
+        }
+    }
+        
+    // Read data
+    private func readKey(service: String = "AGBrewery", account: String) -> SymmetricKey? {
+        // Crear la query
+        let query = [
+            kSecClass: kSecClassKey,
+            kSecAttrService: service,
+            kSecAttrAccount: account,
+            kSecReturnData: true
+        ] as CFDictionary
+        
+        var result: AnyObject?
+        SecItemCopyMatching(query, &result) // TODO: Tratar posibles errores de autentificación con faceID
+        
+        guard let dataResult = result as? SymmetricKey else {
+            print("Error: error converted SymmetricKey")
+            return nil
+        }
+        
+        return dataResult
+    }
+    
+    // Delete data
+    private func deleteKey(service: String = "AGBrewery", account: String) {
+        
+        let query = [
+            kSecClass: kSecClassKey,
+            kSecAttrService: service,
+            kSecAttrAccount: account,
+        ] as CFDictionary
+        
+        let status = SecItemDelete(query)
+        AppLogger.debug("Se han borrado los datos. Status:\(status)")
+    }
+}
+
+
+// MARK: - Encryption Extension
+
+extension KeychainHelper{
+    private func encryptAndStore(){
+        let key = SymmetricKey(size: .bits256)
+        // guardar la key en keychain //TODO: Añadir biometrico
+    }
+    
+    func decrypt(){}
 }

@@ -35,14 +35,18 @@ final class BreweryRepository: BreweryRepositoryProtocol {
     
     }
     /// Función para devolver favoritos
-    func getFavoriteBreweries() -> [String] {
+    func getFavoriteBreweries() -> [Brewery] {
         // Comprobar si hay favoritos están en userDefault
-        guard let favoritesBreweries = UserDefaultsHelper.defaults.readFavorites() else {
+        guard let favoritesBreweriesID = UserDefaultsHelper.defaults.readFavorites() else {
             AppLogger.debug("Error: Failed to read data from the UserDefault.")
             return []
         }
         
-        
+        // Buscar por id de favorito en el keychain
+        guard let favoritesBreweries = KeychainHelper.keychain.searchBreweryes(favoritesBreweriesID)else {
+            AppLogger.debug("Error: Failed to read data from the Keychain.")
+            return []
+        }
     
         return favoritesBreweries
     }
@@ -51,6 +55,10 @@ final class BreweryRepository: BreweryRepositoryProtocol {
         UserDefaultsHelper.defaults.save(brewery.id)
         
         AppLogger.debug("\(brewery.name) brewery has been added")
+    }
+    func deleteFavorite(_ brewery: Brewery) {
+        UserDefaultsHelper.defaults.deleteFavorite(brewery.id)
+        AppLogger.debug("\(brewery.name) brewery has been deleted")
     }
 }
 
@@ -87,12 +95,15 @@ final class BreweryRepositoryMock: BreweryRepositoryProtocol {
         UserDefaultsHelper.defaults.save(brewery.id)
 
         AppLogger.debug("\(brewery.name) brewery has been added")
-        
-        
-        
+     
+    }
+    
+    func deleteFavorite(_ brewery: Brewery) {
+        UserDefaultsHelper.defaults.deleteFavorite(brewery.id)
+        AppLogger.debug("\(brewery.name) brewery has been deleted")
     }
     /// Función para devolver favoritos
-    func getFavoriteBreweries() -> [String] {
+    func getFavoriteBreweries() -> [Brewery] {
         let model1 = Brewery(
             id: "701239cb-5319-4d2e-92c1-129ab0b3b440",
             name: "Bière de la Plaine Mock Favorite",
@@ -133,7 +144,12 @@ final class BreweryRepositoryMock: BreweryRepositoryProtocol {
         UserDefaultsHelper.defaults.save(model2.id)
             
         // Comprobar si hay favoritos están en userDefault
-        guard let favoritesBreweries = UserDefaultsHelper.defaults.readFavorites() else {
+        guard let favoritesBreweriesID = UserDefaultsHelper.defaults.readFavorites() else {
+            AppLogger.debug("Error: Failed to read data from the Keychain.")
+            return []
+        }
+        
+        guard let favoritesBreweries = KeychainHelper.keychain.searchBreweryes(favoritesBreweriesID)else {
             AppLogger.debug("Error: Failed to read data from the Keychain.")
             return []
         }

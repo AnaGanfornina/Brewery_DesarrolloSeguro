@@ -12,7 +12,7 @@ import Combine
 final class BreweryViewModel{
     //publicadores
     var beweryData = [Brewery]()
-    var favoritesBeweryes : [String] = []
+    var favoritesBeweryes : [Brewery] = []
     
     @ObservationIgnored
     private var useCase: BreweriesUseCaseProtocol
@@ -25,7 +25,7 @@ final class BreweryViewModel{
         Task{
             await self.getBreweries()
         }
-        self.getFavoriteBreweries()
+        //self.getFavoriteBreweries()
         
         
     }
@@ -40,6 +40,12 @@ final class BreweryViewModel{
     
     func addFavorite(_ brewery: Brewery){
         useCase.addFavorite(brewery)
+        getFavoriteBreweries()
+        
+    }
+    
+    func deleteFavorite(_ brewery: Brewery){
+        useCase.deleteFavorite(brewery)
         getFavoriteBreweries()
         
     }

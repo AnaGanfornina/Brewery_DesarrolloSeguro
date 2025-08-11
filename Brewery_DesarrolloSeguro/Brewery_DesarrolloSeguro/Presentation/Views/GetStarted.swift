@@ -10,25 +10,36 @@ import SwiftUI
 struct GetStarted: View {
     @Environment(AppState.self) var appState
     var body: some View {
+        
+        
         VStack{
-            Text("Hazte con todos")
-                .font(.title)
+    
+            
+            
+            Image("")
+                .resizable()
+                .frame(height: 200)
+                .background(.greenBrewery)
 
             
-            //boton de "Login"
-            Button {
-                appState.loginApp()
-                
-                //NSLocalizedString("LOGIN_BUTTON", comment: "Entrar22")
-            } label: {
-                Text("Get started")
-                    .font(.title2)
-                    .foregroundStyle(.white)
-                    .frame(width: 300, height: 50)
-                    .background(.blue)
-                    .clipShape(RoundedRectangle(cornerRadius: 20))
-                    .shadow(radius: 10.0, x:5, y:10)
-            }
+
+            
+            Text("BREWERY")
+                .font(.custom("Futura", size: 40))
+                .fontWeight(.medium)
+                .tracking(2)
+                .foregroundColor(.goldenText)
+                .padding(16)
+            
+            
+            Image("FondoStart")
+                .resizable()
+                .ignoresSafeArea()
+                .background(Color.greenBrewery)
+               
+        }// VStack  
+        .onTapGesture {
+            appState.loginApp()
         }
     }
 }

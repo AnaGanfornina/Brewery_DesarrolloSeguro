@@ -35,7 +35,7 @@ struct BrewerieDetail: View {
                 .background(Color.green.opacity(0.4))
             
             VStack {
-                Spacer().frame(height: 40)
+                Spacer().frame(height: 70)
                 
                 Map(position: $cameraPosition) {
                     if coordinatesAvailable() {
@@ -47,7 +47,7 @@ struct BrewerieDetail: View {
                 .frame(height: 500)
                 .cornerRadius(12)
                 
-                Spacer().frame(height: 150)
+                Spacer().frame(height: 10)
                 
                 Text(brewerySelected.name)
                     .font(.custom("Copperplate-Bold", size: 20))

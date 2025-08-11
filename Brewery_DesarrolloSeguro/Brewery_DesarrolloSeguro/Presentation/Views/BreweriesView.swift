@@ -39,23 +39,24 @@ struct BreweriesView: View {
                         }
                 }//ForEach
             }//List
-        }
-        .refreshable {
-            Task{
-                await viewModel.getBreweries()
-            }
-        }
-        .toolbar{
-            ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    //Action here
-                    appState.closeSessionUser()
-                } label: {
-                    Label("Close", systemImage: "power")
+            .refreshable {
+                Task{
+                    await viewModel.getBreweries()
                 }
-                
+            }
+            .toolbar{
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        //Action here
+                        appState.closeSessionUser()
+                    } label: {
+                        Label("Close", systemImage: "power")
+                    }
+                    
+                }
             }
         }
+        
         // Modal
         .sheet(item: $brewerySelected) { brewery in
             BrewerieDetail(viewModel: $viewModel, brewerySelected: brewery)

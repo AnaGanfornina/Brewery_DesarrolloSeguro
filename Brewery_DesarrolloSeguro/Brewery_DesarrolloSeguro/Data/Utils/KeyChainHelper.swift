@@ -58,6 +58,25 @@ final class KeychainHelper {
         delete(account: "Breweryes")
     }
     
+    // MARK: - Key function
+    func saveKey(_ key: SymmetricKey){
+        
+        let keyData: Data = key.withUnsafeBytes { bytes in
+            return Data(bytes)
+        }
+        save(data: keyData, account: "Key")
+    }
+    
+    func readKey() -> SymmetricKey?{
+        guard let keyData = read(account: "Key") else {
+            return nil
+        }
+        return SymmetricKey(data: keyData)
+    }
+    
+    func deleteKey(){
+        delete(account: "Key")
+    }
     
     
     // MARK: - Save data Keychain

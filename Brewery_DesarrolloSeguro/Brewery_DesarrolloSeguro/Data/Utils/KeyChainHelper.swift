@@ -12,7 +12,7 @@ import CryptoKit
 final class KeychainHelper {
     
     static let keychain = KeychainHelper()
-    private let keyTest = "PruebaDeClave"
+
     
     private init() {}
 // TODO: - Revisar
@@ -208,14 +208,3 @@ final class KeychainHelper {
     }
 }
 
-
-// MARK: - Encryption Extension
-
-extension KeychainHelper{
-    private func encryptAndStore(){
-        let key = SymmetricKey(size: .bits256)
-        // guardar la key en keychain //TODO: Añadir biometrico
-    }
-    
-    func decrypt(){}
-}

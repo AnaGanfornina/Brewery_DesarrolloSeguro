@@ -30,7 +30,7 @@ final class UserDefaultsHelper {
        
         //encriiptamos los datos
         let encryptFavoriteID =  encryptWithExistingKey(input: favoriteData)
-        // let encryptFavoriteID = encrypt(input: favoriteData, key: "pruebaClave")
+    
         
         
         favorites.append(encryptFavoriteID)
@@ -55,7 +55,7 @@ final class UserDefaultsHelper {
         
         for item in encryptedArray {
             let decryptedData = decryptWithExistingKey(input: item, key: favoriteKey)
-            // decrypt(input: item, key: "pruebaClave")
+
             
             // convertir cada uno a string
             

@@ -2,49 +2,36 @@
 //  GetStarted.swift
 //  Brewery_DesarrolloSeguro
 //
-//  Created by Ana on 26/6/25.
+//  Created by Ana on 11/8/25.
 //
 
 import SwiftUI
 
 struct GetStarted: View {
-    @Environment(AppState.self) var appState
-    var body: some View {
-        
-        
-        VStack{
     
+    @Binding var viewModel: BreweryViewModel
+    var body: some View {
+        VStack{
+            Text("Hazte con todos!")
+                .font(.title)
             
-            
-            Image("")
-                .resizable()
-                .frame(height: 200)
-                .background(.greenBrewery)
-
-            
-
-            
-            Text("BREWERY")
-                .font(.custom("Futura", size: 40))
-                .fontWeight(.medium)
-                .tracking(2)
-                .foregroundColor(.goldenText)
-                .padding(16)
-            
-            
-            Image("FondoStart")
-                .resizable()
-                .ignoresSafeArea()
-                .background(Color.greenBrewery)
-               
-        }// VStack  
-        .onTapGesture {
-            appState.loginApp()
+            Button{
+                //acción
+                UserDefaultsHelper.defaults.generateNewKey()
+                viewModel.keyState = KeychainHelper.keychain.readKey()
+            }label: {
+                Text("Get Started")
+                    .padding()
+                    .background(Color.blue)
+                    .foregroundStyle(.white)
+                    .font(.title3)
+                    .clipShape(RoundedRectangle(cornerRadius: 20.0))
+            }
         }
+        
     }
 }
 
 #Preview {
-    GetStarted()
-        .environment(AppState())
+    GetStarted(viewModel: .constant(BreweryViewModel(useCase: BreweriesUseCaseMock())))
 }

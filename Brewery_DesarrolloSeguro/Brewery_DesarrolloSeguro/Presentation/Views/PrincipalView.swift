@@ -23,12 +23,27 @@ struct PrincipalView: View {
                     Text("Home")
                 }
             
-            FavoritesView(viewModel: $viewModel)
-            .tabItem {
-                Image(systemName: "heart.fill")
-                Text("Favorites")
-            }
+          
+            
+            
+            PrincipalFavoritesView(viewModel: $viewModel)
+                .tabItem {
+                    Image(systemName: "heart.fill")
+                    Text("Favorites")
+                    
+                    /*
+                     FavoritesView(viewModel: $viewModel)
+                     .tabItem {
+                     Image(systemName: "heart.fill")
+                     Text("Favorites")
+                     }
+                     
+                     */
+                    
+                }
         }
+        
+        .tint(.greenBrewery) // aplica el color a los iconos
     }
 }
 

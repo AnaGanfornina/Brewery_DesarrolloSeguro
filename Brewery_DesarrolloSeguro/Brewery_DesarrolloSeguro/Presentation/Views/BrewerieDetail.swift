@@ -97,6 +97,7 @@ struct BrewerieDetail: View {
                         .scaledToFit()
                         .frame(width: 40, height: 40)
                         .shadow(color: .black.opacity(0.4), radius: 3, x: 2, y: 2)
+                        .tint(.greenBrewery)
                 }
             }
             .padding(.horizontal)

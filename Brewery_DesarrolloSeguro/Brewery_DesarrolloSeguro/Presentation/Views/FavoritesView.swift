@@ -13,34 +13,42 @@ struct FavoritesView: View {
     @Binding var viewModel: BreweryViewModel
     var body: some View {
         
-        
-        List{
-            ForEach(viewModel.favoritesBeweryes){ favorite in
-                Text(favorite.name)
-                    .onTapGesture {
-                        // Destination
-                        brewerySelected = favorite
-                    }
-                    .swipeActions(allowsFullSwipe: true) {
-                        Button {
-                            viewModel.deleteFavorite(favorite)
-                        } label: {
-                            Image(systemName: "trash")
+        if viewModel.favoritesBeweryes.isEmpty {
+            VStack{
+                Text("Listo!, añade tus favoritos en la ventana de home!")
+                    .multilineTextAlignment(.center)
+                    .font(.title3)
+            }
+        } else {
+               
+            List{
+                ForEach(viewModel.favoritesBeweryes){ favorite in
+                    Text(favorite.name)
+                        .onTapGesture {
+                            // Destination
+                            brewerySelected = favorite
                         }
-                        .tint(.red)
-                    }
-            }// ForEach
-        }// List
-        
-        // Modal
-        .sheet(item: $brewerySelected) { brewery in
-            BrewerieDetail(viewModel: $viewModel, brewerySelected: brewery)
-        }
-        .onAppear {
-            viewModel.getFavoriteBreweries()
-        }
-        .refreshable {
-            viewModel.getFavoriteBreweries()
+                        .swipeActions(allowsFullSwipe: true) {
+                            Button {
+                                viewModel.deleteFavorite(favorite)
+                            } label: {
+                                Image(systemName: "trash")
+                            }
+                            .tint(.red)
+                        }
+                }// ForEach
+            }// List
+            
+            // Modal
+            .sheet(item: $brewerySelected) { brewery in
+                BrewerieDetail(viewModel: $viewModel, brewerySelected: brewery)
+            }
+            .onAppear {
+                viewModel.getFavoriteBreweries()
+            }
+            .refreshable {
+                viewModel.getFavoriteBreweries()
+            }
         }
     }
 }

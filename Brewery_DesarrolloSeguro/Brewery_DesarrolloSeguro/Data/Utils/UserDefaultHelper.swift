@@ -100,6 +100,12 @@ final class UserDefaultsHelper {
         KeychainHelper.keychain.deleteKey()
     }
     
+    func generateNewKey(){
+        KeychainHelper.keychain.deleteKey()
+        let newKey = SymmetricKey(size: .bits256)
+        KeychainHelper.keychain.saveKey(newKey)
+    }
+    
     // MARK: - Encrypt
     
     

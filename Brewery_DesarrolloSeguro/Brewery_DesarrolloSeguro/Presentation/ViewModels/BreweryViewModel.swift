@@ -13,6 +13,7 @@ final class BreweryViewModel{
     //publicadores
     var beweryData = [Brewery]()
     var favoritesBeweryes : [Brewery] = []
+    var keyState  = KeychainHelper.keychain.readKey()
     
     @ObservationIgnored
     private var useCase: BreweriesUseCaseProtocol

@@ -8,7 +8,7 @@
 // MARK: - Protocol
 
 protocol BreweriesUseCaseProtocol {
-    var repo: BreweryRepositoryProtocol{get set}
+    var repo: any BreweryRepositoryProtocol{get set}
     
     func getBreweries() async -> [Brewery]
     func addFavorite(_ brewery: Brewery)
@@ -23,7 +23,7 @@ final class BreweriesUseCase: BreweriesUseCaseProtocol{
     
     var repo: any BreweryRepositoryProtocol
     
-    init(repo: BreweryRepository = BreweryRepository()) {
+    init(repo: any BreweryRepositoryProtocol = BreweryRepository()) {
         self.repo = repo
     }
     func getBreweries() async -> [Brewery] {

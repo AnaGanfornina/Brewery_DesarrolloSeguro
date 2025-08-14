@@ -19,7 +19,7 @@ final class BreweryViewModel{
     let authentication: Authentication
     var showAlertFavorite = false
     var showAlertLogout = false
-
+    
     
     
     @ObservationIgnored
@@ -30,14 +30,15 @@ final class BreweryViewModel{
     init(useCase : BreweriesUseCaseProtocol  = BreweriesUseCase()){
         self.useCase = useCase
         self.authentication = Authentication(context: LAContext())
-       // self.keyAuthentication = KeychainHelper.keychain.readKeyWithAutentication(authentication: authentication)
-        self.keyAuthentication = KeychainHelper.keychain.readKey()
+        EncryptionManager.shared.configure(context: authentication)
+        self.keyAuthentication = KeychainHelper.keychain.readKeyWithAutentication(authentication: authentication)
+
         
         
         Task{
             await self.getBreweries()
         }
-       
+        
         
         
     }

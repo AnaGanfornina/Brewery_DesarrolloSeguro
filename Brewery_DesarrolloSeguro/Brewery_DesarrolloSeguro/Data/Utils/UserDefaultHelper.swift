@@ -8,11 +8,12 @@
 import Foundation
 import CryptoKit
 
-
+/*
 final class UserDefaultsHelper {
     
     // MARK: - Properties
     static let defaults = UserDefaultsHelper()
+
     
     // MARK: - Functions
     private init() {}
@@ -28,7 +29,8 @@ final class UserDefaultsHelper {
             return
         }
        
-        //encriiptamos los datos
+        //encriptamos los datos
+       // let encryptFavoriteID =  encryptWithExistingKey(input: favoriteData, authentication: authentication)
         let encryptFavoriteID =  encryptWithExistingKey(input: favoriteData)
     
         
@@ -48,6 +50,7 @@ final class UserDefaultsHelper {
         var favorites: [String] = []
         // leemos la clave del keychain
         
+        //guard  let favoriteKey = KeychainHelper.keychain.readKeyWithAutentication(authentication: <#T##Authentication#>) else{
         guard  let favoriteKey = KeychainHelper.keychain.readKey() else{
             AppLogger.debug("Error to read key from keychain")
             return[]
@@ -95,24 +98,26 @@ final class UserDefaultsHelper {
                 UserDefaults.standard.set(filteredFavorites, forKey: "favorites")
         
     }
-    func deleteFavorites(){
+    func deleteAllFavorites(){
         UserDefaults.standard.removeObject(forKey: "favorites")
         KeychainHelper.keychain.deleteKey()
     }
     
-    func generateNewKey(){
+    func generateNewKey(authentication: Authentication){
         KeychainHelper.keychain.deleteKey()
         let newKey = SymmetricKey(size: .bits256)
+        //KeychainHelper.keychain.saveKeyWithAuthentication(data: newKey, autentication: authentication)
         KeychainHelper.keychain.saveKey(newKey)
     }
     
     // MARK: - Encrypt
     
-    
+    /*
     /// Obtiene la clave existente del keychain o crea una nueva si no existe
         /// - Returns: La clave de encriptación
         private func getOrCreateKey() -> SymmetricKey {
             // Intentar leer la clave existente
+            //if let existingKey = KeychainHelper.keychain.readKeyWithAutentication(authentication: authentication) {
             if let existingKey = KeychainHelper.keychain.readKey() {
                 AppLogger.debug("Using existing key from keychain")
                 return existingKey
@@ -121,6 +126,7 @@ final class UserDefaultsHelper {
             // Si no existe, creamos una nueva
             AppLogger.debug("Creating new key and saving to keychain")
             let newKey = SymmetricKey(size: .bits256)
+            //KeychainHelper.keychain.saveKeyWithAuthentication(data: newKey, autentication: authentication)
             KeychainHelper.keychain.saveKey(newKey)
             return newKey
         }
@@ -159,7 +165,8 @@ final class UserDefaultsHelper {
                return "Error while decryption".data(using: .utf8)!
            }
        }
-    
+    */
     
     
 }
+*/

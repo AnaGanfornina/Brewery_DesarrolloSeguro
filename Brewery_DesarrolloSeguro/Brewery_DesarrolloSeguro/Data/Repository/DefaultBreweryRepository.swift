@@ -37,7 +37,7 @@ final class BreweryRepository: BreweryRepositoryProtocol {
     /// Función para devolver favoritos
     func getFavoriteBreweries() -> [Brewery] {
         // Comprobar si hay favoritos están en userDefault
-        guard let favoritesBreweriesID = UserDefaultsHelper.defaults.readFavorites() else {
+        guard let favoritesBreweriesID = EncryptionManager.shared.readFavorites() else {
             AppLogger.debug("Error: Failed to read data from the UserDefault.")
             return []
         }
@@ -52,12 +52,12 @@ final class BreweryRepository: BreweryRepositoryProtocol {
     }
     
     func addFavorite(_ brewery: Brewery) {
-        UserDefaultsHelper.defaults.save(brewery.id)
+        EncryptionManager.shared.save(brewery.id)
         
         AppLogger.debug("\(brewery.name) brewery has been added")
     }
     func deleteFavorite(_ brewery: Brewery) {
-        UserDefaultsHelper.defaults.deleteFavorite(brewery.id)
+        EncryptionManager.shared.deleteFavorite(brewery.id)
         AppLogger.debug("\(brewery.name) brewery has been deleted")
     }
 }
@@ -71,6 +71,7 @@ final class BreweryRepositoryMock: BreweryRepositoryProtocol {
     
     init(network: NetworkBreweriesProtocol = NetworkBreweriesMock()) {
         self.network = network
+        
     }
     
     func getBreweries() async -> [Brewery] {
@@ -92,14 +93,14 @@ final class BreweryRepositoryMock: BreweryRepositoryProtocol {
     }
     func addFavorite(_ brewery: Brewery) {
         
-        UserDefaultsHelper.defaults.save(brewery.id)
+        EncryptionManager.shared.save(brewery.id)
 
         AppLogger.debug("\(brewery.name) brewery has been added")
      
     }
     
     func deleteFavorite(_ brewery: Brewery) {
-        UserDefaultsHelper.defaults.deleteFavorite(brewery.id)
+        EncryptionManager.shared.deleteFavorite(brewery.id)
         AppLogger.debug("\(brewery.name) brewery has been deleted")
     }
     /// Función para devolver favoritos
@@ -140,11 +141,11 @@ final class BreweryRepositoryMock: BreweryRepositoryProtocol {
             state: "Bouche du Rhône",
             street: "14 Blvd de l'Europe")
         
-        UserDefaultsHelper.defaults.save(model1.id)
-        UserDefaultsHelper.defaults.save(model2.id)
+        EncryptionManager.shared.save(model1.id)
+        EncryptionManager.shared.save(model2.id)
             
         // Comprobar si hay favoritos están en userDefault
-        guard let favoritesBreweriesID = UserDefaultsHelper.defaults.readFavorites() else {
+        guard let favoritesBreweriesID = EncryptionManager.shared.readFavorites() else {
             AppLogger.debug("Error: Failed to read data from the Keychain.")
             return []
         }

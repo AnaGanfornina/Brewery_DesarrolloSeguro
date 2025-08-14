@@ -16,18 +16,24 @@ final class AppState {
     
     func loginApp(){
         self.status = .loading
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             // Código que se ejecuta después de 3 segundos
-            print("Han pasado 3 segundos")
+            AppLogger.debug("Info: Han pasado 2 segundos")
             self.isLogged = true
             self.status = .loaded
         }
     }
     
-    func closeSessionUser(){
+    func closeSessionUserAndEraseCredentials(){
         
         KeychainHelper.keychain.deleteBrewery()
-        UserDefaultsHelper.defaults.deleteFavorites()
+        EncryptionManager.shared.deleteAllFavorites()
+        KeychainHelper.keychain.deleteKey()
+        self.status = .none
+    
+    }
+    func closeSessionUser(){
+        
         self.status = .none
             
         

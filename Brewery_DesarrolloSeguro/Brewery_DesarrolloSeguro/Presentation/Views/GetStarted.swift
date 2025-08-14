@@ -17,8 +17,9 @@ struct GetStarted: View {
             
             Button{
                 //acción
-                UserDefaultsHelper.defaults.generateNewKey()
-                viewModel.keyState = KeychainHelper.keychain.readKey()
+                EncryptionManager.shared.generateNewKey()
+                
+                viewModel.keyAuthentication = KeychainHelper.keychain.readKeyWithAutentication(authentication: viewModel.authentication)
             }label: {
                 Text("Get Started")
                     .padding()

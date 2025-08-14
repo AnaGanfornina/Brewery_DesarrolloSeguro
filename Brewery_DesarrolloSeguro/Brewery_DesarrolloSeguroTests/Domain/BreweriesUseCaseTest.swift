@@ -30,10 +30,10 @@ final class BreweriesUseCaseTest: XCTestCase {
         
         // Then
 
-        XCTAssertEqual(expectedBreweries.count, 50)
+        XCTAssertEqual(expectedBreweries.count, 2)
         let brewery = try XCTUnwrap(expectedBreweries.first)
-        XCTAssertEqual(brewery.name, "(405) Brewing Co")
-        XCTAssertEqual(brewery.id, "5128df48-79fc-4f0f-8b52-d06be54d0cec")
+        XCTAssertEqual(brewery.name, "Bière de la Plaine Mock")
+        XCTAssertEqual(brewery.id, "701239cb-5319-4d2e-92c1-129ab0b3b440")
         XCTAssertEqual(brewery.breweryType, "micro")
         
     }

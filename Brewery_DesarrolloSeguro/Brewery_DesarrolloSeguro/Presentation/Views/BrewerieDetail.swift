@@ -82,13 +82,19 @@ struct BrewerieDetail: View {
                     .padding()
                 
                 Button {
-                    withAnimation(.spring()) {
-                        if viewModel.favoritesBeweryes.contains(where: { $0.id == brewerySelected.id }) {
-                            viewModel.deleteFavorite(brewerySelected)
-                            AppLogger.debug("Info: es favorito desde Detalle")
-                        } else {
-                            viewModel.addFavorite(brewerySelected)
-                            AppLogger.debug("Info: eliminado de favorito desde Detalle")
+                    if viewModel.showAlertFavorite{
+                        viewModel.showAlertFavorite.toggle()
+                    }else {
+                        
+                        
+                        withAnimation(.spring()) {
+                            if viewModel.favoritesBeweryes.contains(where: { $0.id == brewerySelected.id }) {
+                                viewModel.deleteFavorite(brewerySelected)
+                                AppLogger.debug("Info: es favorito desde Detalle")
+                            } else {
+                                viewModel.addFavorite(brewerySelected)
+                                AppLogger.debug("Info: eliminado de favorito desde Detalle")
+                            }
                         }
                     }
                 } label: {
@@ -98,6 +104,16 @@ struct BrewerieDetail: View {
                         .frame(width: 40, height: 40)
                         .shadow(color: .black.opacity(0.4), radius: 3, x: 2, y: 2)
                         .tint(.greenBrewery)
+                }
+                .alert(isPresented: $viewModel.showAlertFavorite){
+                    Alert(
+                        title: Text("Aviso al usuario"),
+                        message: Text("Debe logearse para poder guardar sus favoritos"),
+                        dismissButton: .default(Text("Aceptar")) {
+                            viewModel.showAlertFavorite = false
+                            
+                        }
+                    )
                 }
             }
             .padding(.horizontal)

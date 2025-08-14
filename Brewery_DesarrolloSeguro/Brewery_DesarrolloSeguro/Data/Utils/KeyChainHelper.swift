@@ -32,7 +32,7 @@ final class KeychainHelper {
     
     func readBreweryes() -> [Brewery]?{
         guard let breweryesData = read(account: "Breweryes") else {
-            AppLogger.debug("Error: could not read Breweryes from keychain")
+            AppLogger.debug("Info: Breweries from Keychain is empty")
             return nil
         }
 
@@ -105,7 +105,7 @@ final class KeychainHelper {
             
             SecItemUpdate(queryToUpdate, attributesToUpdate)
         } else if status != errSecSuccess { // errSecSuccess
-            print("Error: error adding item")
+            AppLogger.debug("Error: error adding item")
         }
     }
         
@@ -144,13 +144,28 @@ final class KeychainHelper {
     }
     
     // MARK: - Save key Keychain
-    private func saveKey(data: SymmetricKey, service: String = "AGBrewery", account: String) {
+    func saveKeyWithAuthentication(data: SymmetricKey, service: String = "AGBrewery", account: String = "Key", autentication: Authentication) {
+        // obtenemos el control de acceso al dato
+        guard let accessControl = autentication.getAccessControl() else {
+            AppLogger.debug("Error: could not create access control")
+            return
+        }
+        
+        // Convertir SymetricKey a data
+        // FIXME: Esto es lo que no entiendo, por que no podría usar directamente kSecClassKey si es una clave simetrica ??
+        let keyData: Data = data.withUnsafeBytes { bytes in
+                return Data(bytes)
+            }
+        
+        
+    
         // Crear la query
         let query = [
-            kSecValueData: data,
-            kSecClass: kSecClassKey,
+            kSecValueData: keyData,
+            kSecClass: kSecClassGenericPassword,
             kSecAttrService: service,
-            kSecAttrAccount: account
+            kSecAttrAccount: account,
+            kSecAttrAccessControl: accessControl
         ] as CFDictionary
         
         let status = SecItemAdd(query, nil)
@@ -162,36 +177,42 @@ final class KeychainHelper {
             let queryToUpdate = [
                 kSecClass: kSecClassGenericPassword,
                 kSecAttrService: service,
-                kSecAttrAccount: account
+                kSecAttrAccount: account,
+                kSecAttrAccessControl: accessControl
             ] as CFDictionary
             
-            let attributesToUpdate = [kSecValueData: data] as CFDictionary
+            let attributesToUpdate = [kSecValueData: keyData] as CFDictionary
             
             SecItemUpdate(queryToUpdate, attributesToUpdate)
         } else if status != errSecSuccess { // errSecSuccess
-            print("Error: error adding item")
+            AppLogger.debug("Error: error adding item")
         }
     }
         
     // Read data
-    private func readKey(service: String = "AGBrewery", account: String) -> SymmetricKey? {
+    func readKeyWithAutentication(service: String = "AGBrewery", account: String = "Key", authentication: Authentication) -> SymmetricKey? {
+        
+        // le indicamos el contexto, que viene desde autentication
+        let context = authentication.context
+        
         // Crear la query
         let query = [
-            kSecClass: kSecClassKey,
+            kSecClass: kSecClassGenericPassword,
             kSecAttrService: service,
             kSecAttrAccount: account,
-            kSecReturnData: true
+            kSecReturnData: true,
+            kSecUseAuthenticationContext: context // -> esto es importante. Va a comprobar que en el contexto el usuario esté autenticado
         ] as CFDictionary
         
         var result: AnyObject?
         SecItemCopyMatching(query, &result) // TODO: Tratar posibles errores de autentificación con faceID
         
-        guard let dataResult = result as? SymmetricKey else {
-            print("Error: error converted SymmetricKey")
+        guard let dataResult = result as? Data else {
+            AppLogger.debug("Error: error converted SymmetricKey")
             return nil
         }
         
-        return dataResult
+        return SymmetricKey(data: dataResult)
     }
     
     // Delete data

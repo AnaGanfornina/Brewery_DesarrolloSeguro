@@ -6,6 +6,6 @@
 //
 
 
-enum Status {
+enum Status : Equatable{
     case none, loading, loaded, error(error: String)
 }

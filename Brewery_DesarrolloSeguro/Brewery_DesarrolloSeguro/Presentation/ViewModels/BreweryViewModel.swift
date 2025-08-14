@@ -7,13 +7,19 @@
 
 import Foundation
 import Combine
+import LocalAuthentication
+import CryptoKit
 
 @Observable
 final class BreweryViewModel{
     //publicadores
     var beweryData = [Brewery]()
     var favoritesBeweryes : [Brewery] = []
-    var keyState  = KeychainHelper.keychain.readKey()
+    var keyAuthentication : SymmetricKey?
+    let authentication: Authentication
+    var showAlert = false
+
+    
     
     @ObservationIgnored
     private var useCase: BreweriesUseCaseProtocol
@@ -22,11 +28,13 @@ final class BreweryViewModel{
     
     init(useCase : BreweriesUseCaseProtocol  = BreweriesUseCase()){
         self.useCase = useCase
+        self.authentication = Authentication(context: LAContext())
+        self.keyAuthentication = KeychainHelper.keychain.readKeyWithAutentication(authentication: authentication)
         
         Task{
             await self.getBreweries()
         }
-        //self.getFavoriteBreweries()
+       
         
         
     }
@@ -40,8 +48,15 @@ final class BreweryViewModel{
     }
     
     func addFavorite(_ brewery: Brewery){
-        useCase.addFavorite(brewery)
-        getFavoriteBreweries()
+        if keyAuthentication != nil {
+            useCase.addFavorite(brewery)
+            getFavoriteBreweries()
+            AppLogger.debug("Info: es favorito")
+        } else {
+            // marcamos para que se muestre la alerta en la vista
+            showAlert.toggle()
+        }
+        
         
     }
     

@@ -12,6 +12,7 @@ struct BreweriesView: View {
     
     @Binding var viewModel: BreweryViewModel
     @State var brewerySelected: Brewery?
+    
   
   
     var body: some View {
@@ -29,16 +30,24 @@ struct BreweriesView: View {
                             Button {
                                 // action
                                 viewModel.addFavorite(brewery)
-                                AppLogger.debug("Info: es favorito")
+                                
                                 
                             } label: {
                                 Label("Favorite", systemImage: "heart.fill")
                             }
-                            .tint(.red)
+                            .tint(.greenBrewery)
+                            
                             
                         }
                 }//ForEach
             }//List
+            .alert(isPresented: $viewModel.showAlert) {
+                Alert(
+                    title: Text("Aviso al usuario"),
+                    message: Text("Debe logearse para poder guardar sus favoritos"),
+                    dismissButton: .default(Text("Aceptar"))
+                )
+            }
             .refreshable {
                 Task{
                     await viewModel.getBreweries()

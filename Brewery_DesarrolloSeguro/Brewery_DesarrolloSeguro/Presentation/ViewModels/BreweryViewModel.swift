@@ -17,7 +17,8 @@ final class BreweryViewModel{
     var favoritesBeweryes : [Brewery] = []
     var keyAuthentication : SymmetricKey?
     let authentication: Authentication
-    var showAlert = false
+    var showAlertFavorite = false
+    var showAlertLogout = false
 
     
     
@@ -29,7 +30,9 @@ final class BreweryViewModel{
     init(useCase : BreweriesUseCaseProtocol  = BreweriesUseCase()){
         self.useCase = useCase
         self.authentication = Authentication(context: LAContext())
-        self.keyAuthentication = KeychainHelper.keychain.readKeyWithAutentication(authentication: authentication)
+       // self.keyAuthentication = KeychainHelper.keychain.readKeyWithAutentication(authentication: authentication)
+        self.keyAuthentication = KeychainHelper.keychain.readKey()
+        
         
         Task{
             await self.getBreweries()
@@ -54,7 +57,7 @@ final class BreweryViewModel{
             AppLogger.debug("Info: es favorito")
         } else {
             // marcamos para que se muestre la alerta en la vista
-            showAlert.toggle()
+            showAlertFavorite.toggle()
         }
         
         

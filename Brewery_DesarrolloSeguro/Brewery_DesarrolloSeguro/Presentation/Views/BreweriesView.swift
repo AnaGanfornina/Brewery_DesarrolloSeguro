@@ -41,7 +41,7 @@ struct BreweriesView: View {
                         }
                 }//ForEach
             }//List
-            .alert(isPresented: $viewModel.showAlert) {
+            .alert(isPresented: $viewModel.showAlertFavorite) {
                 Alert(
                     title: Text("Aviso al usuario"),
                     message: Text("Debe logearse para poder guardar sus favoritos"),
@@ -57,12 +57,28 @@ struct BreweriesView: View {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         //Action here
-                        appState.closeSessionUser()
+                        viewModel.showAlertLogout.toggle()
                     } label: {
                         Label("Close", systemImage: "power")
                     }
                     
                 }
+            }
+            .alert(isPresented: $viewModel.showAlertLogout) {
+                Alert(
+                    title: Text("Aviso al usuario"),
+                    message: Text("¿Desea salir de la cuenta borrando credenciales?"),
+                    primaryButton: .destructive(Text("Sí, borrar")) {
+                        // Acción si acepta borrar
+                        appState.closeSessionUserAndEraseCredentials()
+                    },
+                    secondaryButton: .cancel(Text("Solo cerrar sesión")) {
+                        // Acción si NO quiere borrar credenciales
+                        appState.closeSessionUser()
+                        AppLogger.debug("Info:  salimos de la aplicación sin borrar credenciales")
+                        
+                    }
+                )
             }
         }
         

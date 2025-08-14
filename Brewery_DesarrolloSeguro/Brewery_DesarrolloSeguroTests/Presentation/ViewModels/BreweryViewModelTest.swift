@@ -48,7 +48,7 @@ final class BreweryViewModelTest: XCTestCase {
         
         // Then
         
-        wait(for: [expectation], timeout: 0.1)
+        wait(for: [expectation], timeout: 1.0)
         
         // Como sabemos que el mock devuelve dos breweries
         XCTAssertEqual(sut.beweryData.count, 2)

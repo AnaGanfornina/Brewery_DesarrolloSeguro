@@ -44,6 +44,16 @@ struct BreweriesView: View {
                         }
                 }//ForEach
             }//List
+            .alert(isPresented: $viewModel.showAlertFavorite){
+                Alert(
+                    title: Text("Aviso al usuario"),
+                    message: Text("Debe logearse para poder guardar sus favoritos"),
+                    dismissButton: .default(Text("Aceptar")) {
+                        viewModel.showAlertFavorite = false
+                        
+                    }
+                )
+            }
             .confirmationDialog("Aviso al usuario", isPresented:  $showLogoutDialog) {
                 Button("Sí, borrar", role: .destructive) {
                     appState.closeSessionUserAndEraseCredentials()

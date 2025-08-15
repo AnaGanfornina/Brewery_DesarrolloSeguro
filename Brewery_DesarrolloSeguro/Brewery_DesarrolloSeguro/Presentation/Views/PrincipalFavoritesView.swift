@@ -13,6 +13,10 @@ struct PrincipalFavoritesView: View {
     @Binding var viewModel: BreweryViewModel
     
     
+    // Estado local para el diálogo
+    @State private var showLogoutDialog = false
+    
+    
     
     
     var body: some View {
@@ -32,7 +36,7 @@ struct PrincipalFavoritesView: View {
                         
                         // Preguntar si queremos salir o salir y borrar la cuenta
                         
-                        viewModel.showAlertLogout.toggle()
+                        showLogoutDialog.toggle()
                     } label: {
                         Label("Close", systemImage: "power")
                         
@@ -40,7 +44,7 @@ struct PrincipalFavoritesView: View {
                     
                 }
             }
-            .confirmationDialog("Aviso al usuario", isPresented: $viewModel.showAlertLogout) {
+            .confirmationDialog("Aviso al usuario", isPresented: $showLogoutDialog) {
                 Button("Sí, borrar", role: .destructive) {
                     appState.closeSessionUserAndEraseCredentials()
                 }

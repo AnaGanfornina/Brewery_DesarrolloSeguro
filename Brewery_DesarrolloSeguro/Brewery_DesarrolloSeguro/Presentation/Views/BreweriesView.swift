@@ -13,6 +13,9 @@ struct BreweriesView: View {
     @Binding var viewModel: BreweryViewModel
     @State var brewerySelected: Brewery?
     
+    // Estado local para el diálogo
+    @State private var showLogoutDialog = false
+    
     
     
     var body: some View {
@@ -41,7 +44,7 @@ struct BreweriesView: View {
                         }
                 }//ForEach
             }//List
-            .confirmationDialog("Aviso al usuario", isPresented: $viewModel.showAlertLogout) {
+            .confirmationDialog("Aviso al usuario", isPresented:  $showLogoutDialog) {
                 Button("Sí, borrar", role: .destructive) {
                     appState.closeSessionUserAndEraseCredentials()
                 }
@@ -63,7 +66,7 @@ struct BreweriesView: View {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         //Action here
-                        viewModel.showAlertLogout.toggle()
+                        showLogoutDialog.toggle()
                     } label: {
                         Label("Close", systemImage: "power")
                     }

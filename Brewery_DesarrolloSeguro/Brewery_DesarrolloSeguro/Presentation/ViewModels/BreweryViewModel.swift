@@ -18,7 +18,7 @@ final class BreweryViewModel{
     var keyAuthentication : SymmetricKey?
     let authentication: Authentication
     var showAlertFavorite = false
-    var showAlertLogout = false
+    //var showAlertLogout = false
     
     
     
@@ -57,7 +57,7 @@ final class BreweryViewModel{
             favoritesBeweryes = []
             keyAuthentication = nil
             showAlertFavorite = false
-            showAlertLogout = false
+            //showAlertLogout = false
             
             // Cargar datos para la nueva sesión
             Task {
@@ -81,7 +81,7 @@ final class BreweryViewModel{
            favoritesBeweryes = []
            keyAuthentication = nil
            showAlertFavorite = false
-           showAlertLogout = false
+           //showAlertLogout = false
            
            AppLogger.debug("ViewModel limpiado para fin de sesión")
        }

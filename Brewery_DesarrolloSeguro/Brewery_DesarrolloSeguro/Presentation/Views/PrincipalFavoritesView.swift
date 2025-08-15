@@ -40,22 +40,17 @@ struct PrincipalFavoritesView: View {
                     
                 }
             }
-            .alert(isPresented: $viewModel.showAlertLogout) {
-                Alert(
-                    title: Text("Aviso al usuario"),
-                    message: Text("¿Desea salir de la cuenta borrando credenciales?"),
-                    primaryButton: .destructive(Text("Sí, borrar")) {
-                        // Acción si acepta borrar
-                        appState.closeSessionUserAndEraseCredentials()
-                    },
-                    secondaryButton: .cancel(Text("Solo cerrar sesión")) {
-                        // Acción si NO quiere borrar credenciales
-                        appState.closeSessionUser()
-                        AppLogger.debug("Info:  salimos de la aplicación sin borrar credenciales")
-                        
-                    }
-                    
-                )
+            .confirmationDialog("Aviso al usuario", isPresented: $viewModel.showAlertLogout) {
+                Button("Sí, borrar", role: .destructive) {
+                    appState.closeSessionUserAndEraseCredentials()
+                }
+                Button("Solo cerrar sesión") {
+                    appState.closeSessionUser()
+                    AppLogger.debug("Info: salimos de la aplicación sin borrar credenciales")
+                }
+                Button("Cancelar", role: .cancel) { }
+            } message: {
+                Text("¿Desea salir de la cuenta borrando credenciales?")
             }
         }
         

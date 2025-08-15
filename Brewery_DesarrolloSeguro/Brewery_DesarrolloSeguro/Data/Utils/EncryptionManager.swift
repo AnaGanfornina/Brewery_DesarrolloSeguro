@@ -21,12 +21,6 @@ class EncryptionManager{
            self.context = context
        }
     
-    /*
-     init(context: Authentication) {
-     self.context = context
-     }
-     */
-    
     // MARK: - Guardar en UserDefaults con encriptación
     
     func save(_ favoriteID : String) {
@@ -138,19 +132,6 @@ class EncryptionManager{
     func deleteAllFavorites(){
         UserDefaults.standard.removeObject(forKey: "favorites")
         KeychainHelper.keychain.deleteKey()
-        /*
-        
-        // MARK: - Funciones de encriptación publicas
-        func encrypt(data: Data) -> Data {
-            encryptWithExistingKey(input: data)
-        }
-        
-        func decrypt(data: Data, simetricKey: SymmetricKey) -> Data {
-            decryptWithExistingKey(input: data, key: simetricKey)
-        }
-        
-        */
-        
     }
     
     // MARK: - Generar nueva clave

@@ -55,7 +55,8 @@ struct FavoritesView: View {
 
 #Preview {
     
-    FavoritesView(viewModel: .constant(BreweryViewModel(useCase: BreweriesUseCaseMock())))
+    FavoritesView(viewModel: .constant(BreweryViewModel(useCase: BreweriesUseCaseMock(),
+                                                        authentication: Authentication(context: AppState().authenticationContext))))
         .environment(AppState())
     
     

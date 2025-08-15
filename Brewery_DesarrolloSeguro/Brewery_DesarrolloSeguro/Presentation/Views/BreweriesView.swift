@@ -92,6 +92,12 @@ struct BreweriesView: View {
 
 
 #Preview {
-    BreweriesView(viewModel: .constant(BreweryViewModel(useCase: BreweriesUseCaseMock())))
-        .environment(AppState())
+    let appState = AppState()
+        return BreweriesView(
+            viewModel: .constant(BreweryViewModel(
+                useCase: BreweriesUseCaseMock(),
+                authentication: Authentication(context: appState.authenticationContext)
+            ))
+        )
+        .environment(appState)
 }

@@ -12,6 +12,9 @@ struct PrincipalFavoritesView: View {
     @Environment(AppState.self) var appState
     @Binding var viewModel: BreweryViewModel
     
+    
+    
+    
     var body: some View {
         NavigationStack{
             Group{
@@ -51,6 +54,7 @@ struct PrincipalFavoritesView: View {
                         AppLogger.debug("Info:  salimos de la aplicación sin borrar credenciales")
                         
                     }
+                    
                 )
             }
         }
@@ -61,6 +65,7 @@ struct PrincipalFavoritesView: View {
 }
 
 #Preview {
-    PrincipalFavoritesView(viewModel: .constant(BreweryViewModel(useCase: BreweriesUseCaseMock())))
+    PrincipalFavoritesView(viewModel: .constant(BreweryViewModel(useCase: BreweriesUseCaseMock(),
+                                                                 authentication: Authentication(context: AppState().authenticationContext))))
         .environment(AppState())
 }

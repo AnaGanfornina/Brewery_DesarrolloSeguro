@@ -34,5 +34,6 @@ struct GetStarted: View {
 }
 
 #Preview {
-    GetStarted(viewModel: .constant(BreweryViewModel(useCase: BreweriesUseCaseMock())))
+    GetStarted(viewModel: .constant(BreweryViewModel(useCase: BreweriesUseCaseMock(),
+                                                      authentication: Authentication(context: AppState().authenticationContext))))
 }

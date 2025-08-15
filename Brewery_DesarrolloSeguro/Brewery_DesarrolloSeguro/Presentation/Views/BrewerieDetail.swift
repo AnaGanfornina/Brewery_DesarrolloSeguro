@@ -130,7 +130,8 @@ struct BrewerieDetail: View {
 
 #Preview {
     BrewerieDetail(
-        viewModel: .constant(BreweryViewModel(useCase: BreweriesUseCaseMock())),
+        viewModel: .constant(BreweryViewModel(useCase: BreweriesUseCaseMock(),
+                                              authentication: Authentication(context: AppState().authenticationContext))),
         brewerySelected: Brewery(
             id: "701239cb-5319-4d2e-92c1-129ab0b3b440",
             name: "Bière de la Plaine Mock",

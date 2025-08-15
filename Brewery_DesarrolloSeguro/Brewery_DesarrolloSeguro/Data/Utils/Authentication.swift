@@ -17,6 +17,20 @@ class Authentication{
         self.context = context // Se guarda el contexto de autentificación introducido por parámetro
     }
     
+    // Método que autentica al usuario y ejecuta la closure cuando termina
+      func authenticateUser(completion: @escaping (Bool) -> Void) {
+          if context.canEvaluatePolicy(.deviceOwnerAuthentication, error: &error) {
+              let reason = "Identifícate para acceder a tus favoritos"
+              context.evaluatePolicy(.deviceOwnerAuthentication, localizedReason: reason) { success, _ in
+                  DispatchQueue.main.async {
+                      completion(success)
+                  }
+              }
+          } else {
+              completion(false)
+          }
+      }
+    
     
     func getAccessControl() -> SecAccessControl? {
         var accessControlError: Unmanaged<CFError>?

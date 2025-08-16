@@ -6,30 +6,75 @@
 //
 
 import XCTest
+@testable import Brewery_DesarrolloSeguro
 
 final class AuthenticationTest: XCTestCase {
-
+    var sut: AuthenticationMock!
+    var viewModel: BreweryViewModel!
+    
     override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+        sut = AuthenticationMock()
+        viewModel = BreweryViewModel(authentication: sut)
     }
-
+    
     override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+        sut = nil
+        sut = nil
+        super.tearDown()
     }
-
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
-    }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
+    
+    func test_Authentication_Success() {
+        // Given
+        sut.shouldAuthenticationSucceed = true
+        let expectation = XCTestExpectation(description: "Authentication should succeed")
+        
+        // When
+        sut.authenticateUser { success in
+            // Then
+            XCTAssertTrue(success)
+            XCTAssertEqual(self.sut.authenticateUserCallCount, 1)
+            expectation.fulfill()
         }
+        
+        wait(for: [expectation], timeout: 1.0)
     }
+
+    func test_Authentication_Failure() {
+           // Given
+           sut.simulateFailure() // ← Más simple
+           let expectation = XCTestExpectation(description: "Authentication should fail")
+           
+           // When
+           sut.authenticateUser { success in
+               // Then
+               XCTAssertFalse(success)
+               expectation.fulfill()
+           }
+           
+           wait(for: [expectation], timeout: 1.0)
+       }
+    
+    func test_GetAccessControl_Success() {
+           // Given - Mock ya configurado por defecto para éxito
+           
+           // When
+           let accessControl = sut.getAccessControl()
+           
+           // Then
+           XCTAssertNotNil(accessControl)
+           XCTAssertEqual(sut.getAccessControlCallCount, 1)
+       }
+    
+    func testGetAccessControlFailure() {
+           // Given
+           sut.shouldAccessControlSucceed = false
+           
+           // When
+           let accessControl = sut.getAccessControl()
+           
+           // Then
+           XCTAssertNil(accessControl)
+       }
+       
 
 }

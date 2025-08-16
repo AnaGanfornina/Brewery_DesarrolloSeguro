@@ -54,7 +54,8 @@ struct PrincipalView: View {
         guard appState.isLogged else { return }
         
         // Crear nuevo ViewModel con contexto compartido del AppState
-        let newViewModel = BreweryViewModel(authentication: Authentication(context: appState.authenticationContext))
+        let authentication = Authentication(context: appState.authenticationContext)
+        let newViewModel = BreweryViewModel(authentication: authentication)
         
         // Inicializar para nueva sesión
         newViewModel.initializeForNewSession()

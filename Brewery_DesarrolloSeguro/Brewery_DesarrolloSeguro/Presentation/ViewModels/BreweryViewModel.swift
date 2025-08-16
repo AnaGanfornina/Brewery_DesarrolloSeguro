@@ -16,9 +16,9 @@ final class BreweryViewModel{
     var beweryData = [Brewery]()
     var favoritesBeweryes : [Brewery] = []
     var keyAuthentication : SymmetricKey?
-    let authentication: Authentication
+    let authentication: AuthenticationProtocol
     var showAlertFavorite = false
-    //var showAlertLogout = false
+
     
     
     
@@ -27,25 +27,17 @@ final class BreweryViewModel{
     
     
     
-    init(useCase : BreweriesUseCaseProtocol  = BreweriesUseCase(), authentication: Authentication){
+    init(useCase : BreweriesUseCaseProtocol  = BreweriesUseCase(), authentication: AuthenticationProtocol){
         self.useCase = useCase
         self.authentication = authentication
         EncryptionManager.shared.configure(context: authentication)
-        //self.keyAuthentication = KeychainHelper.keychain.readKeyWithAutentication(authentication: authentication)
-        
-        //self.loadKeyWithAuthentication()
+        // Configurar EncryptionManager si es la implementación real
         /*
-        // Solo cargamos la key si ya existe, sin pedir Face ID al entrar
-            if let existingKey = KeychainHelper.keychain.readKeyWithAutentication(authentication: authentication) {
-                self.keyAuthentication = existingKey
-            }
-      
-        
-        
-        Task{
-            await self.getBreweries()
+        if let realAuth = authentication as? Authentication {
+            EncryptionManager.shared.configure(context: realAuth.context)
         }
          */
+      
     }
     
     // MARK: - Session Management
@@ -102,10 +94,10 @@ final class BreweryViewModel{
     
     @MainActor
     func getBreweries() async {
-        Task{
-            self.beweryData =  await useCase.getBreweries()
+        
+        self.beweryData =  await useCase.getBreweries()
             
-        }
+        
     }
     
     func addFavorite(_ brewery: Brewery){
@@ -119,7 +111,7 @@ final class BreweryViewModel{
                 authentication.authenticateUser { [weak self] success in
                     guard let self = self else { return }
                     if success {
-                        self.keyAuthentication = KeychainHelper.keychain.readKeyWithAutentication(authentication: self.authentication)
+                        self.loadKeyAfterAuthentication()
                         
                         if let key = self.keyAuthentication {
                             self.useCase.addFavorite(brewery)
@@ -143,6 +135,19 @@ final class BreweryViewModel{
     }
     
     // MARK: - Private Methods
+    
+    /// Método auxiliar para cargar key después de autenticación
+        private func loadKeyAfterAuthentication() {
+            if let realAuth = authentication as? Authentication {
+                self.keyAuthentication = KeychainHelper.keychain.readKeyWithAutentication(authentication: realAuth)
+            } else {
+                // Para mock, simular que tenemos una key
+                #if DEBUG
+                self.keyAuthentication = SymmetricKey(size: .bits256)
+                #endif
+            }
+        }
+        
     
     
     /// Carga key existente sin pedir autenticación (solo si ya existe)

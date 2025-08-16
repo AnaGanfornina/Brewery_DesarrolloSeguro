@@ -9,13 +9,25 @@ import Foundation
 import CryptoKit
 
 
-final class KeychainHelper {
+// MARK: - Protocolo para KeychainHelper
+
+/// Protocolo con todo lo referente a al autenticación
+protocol KeychainHelperProtocol {
+    func saveKeyWithAuthentication(data: SymmetricKey, service: String, account: String, autentication: AuthenticationProtocol)
+    func readKeyWithAutentication(service: String, account: String, authentication: AuthenticationProtocol) -> SymmetricKey?
+    func deleteKey()
+    
+    
+    
+
+}
+
+final class KeychainHelper: KeychainHelperProtocol {
     
     static let keychain = KeychainHelper()
 
     
     private init() {}
-// TODO: - Revisar
     
     // MARK: - Brewery functions
     
@@ -144,7 +156,7 @@ final class KeychainHelper {
     }
     
     // MARK: - Save key Keychain
-    func saveKeyWithAuthentication(data: SymmetricKey, service: String = "AGBrewery", account: String = "Key", autentication: Authentication) {
+    func saveKeyWithAuthentication(data: SymmetricKey, service: String = "AGBrewery", account: String = "Key", autentication: AuthenticationProtocol) {
         // obtenemos el control de acceso al dato
         guard let accessControl = autentication.getAccessControl() else {
             AppLogger.debug("Error: could not create access control")
@@ -190,7 +202,7 @@ final class KeychainHelper {
     }
         
     // Read data
-    func readKeyWithAutentication(service: String = "AGBrewery", account: String = "Key", authentication: Authentication) -> SymmetricKey? {
+    func readKeyWithAutentication(service: String = "AGBrewery", account: String = "Key", authentication: AuthenticationProtocol) -> SymmetricKey? {
         
         // le indicamos el contexto, que viene desde autentication
         let context = authentication.context
@@ -229,3 +241,47 @@ final class KeychainHelper {
     }
 }
 
+// MARK: - KeychainHelper Mock
+
+final class KeychainHelperMock: KeychainHelperProtocol {
+    
+    // Simulamos storage en memoria para tests
+    private var mockStorage: [String: SymmetricKey] = [:]
+    
+    
+    // Para verificar llamadas en tests
+    var saveKeyCallCount = 0
+    var readKeyCallCount = 0
+    var deleteKeyCallCount = 0
+    
+    func saveKeyWithAuthentication(data: SymmetricKey, service: String, account: String, autentication: any AuthenticationProtocol) {
+        saveKeyCallCount += 1
+        
+        // Simulamos guardado sin Keychain real
+        let key = "\(service)_\(account)"
+        mockStorage[key] = data
+        AppLogger.debug("KeyChainMock: Key saved to memory storage")
+    }
+    
+    func readKeyWithAutentication(service: String, account: String, authentication: any AuthenticationProtocol) -> SymmetricKey? {
+        readKeyCallCount += 1
+        
+        // Leemos desde "memoria", sin Keychain real
+        let key = "\(service)_\(account)"
+        let result = mockStorage[key]
+        AppLogger.debug("KeyChainMock: Key read from memory storage")
+        return result
+    }
+    
+    func deleteKey() {
+        deleteKeyCallCount += 1
+        
+        // Limpiamos el "almacenamiento "
+        mockStorage.removeAll()
+        AppLogger.debug("KeyChainMock: All keys deleted from memory storage")
+    }
+    
+    
+ 
+    
+}

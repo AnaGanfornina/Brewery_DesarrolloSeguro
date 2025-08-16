@@ -12,7 +12,7 @@ import LocalAuthentication
 final class AppState {
     var status = Status.none
     var isLogged: Bool = false
-    let authenticationContext = LAContext() // autenticación de contexto para toda la aplicación
+    let authenticationContext =  LAContext() // autenticación de contexto para toda la aplicación
    
     // MARK: - Functions
     

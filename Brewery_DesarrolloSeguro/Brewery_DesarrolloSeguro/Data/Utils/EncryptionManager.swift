@@ -12,12 +12,12 @@ class EncryptionManager{
     // MARK: - Singleton
     static let shared = EncryptionManager()
     
-    private var context: Authentication?
+    private var context: AuthenticationProtocol?
     
     private init() {}
     
     // Método para configurar el contexto de autenticación
-       func configure(context: Authentication) {
+       func configure(context: AuthenticationProtocol) {
            self.context = context
        }
     
@@ -153,7 +153,7 @@ class EncryptionManager{
     
     /// Obtiene la clave existente del keychain o crea una nueva si no existe
     /// - Returns: La clave de encriptación
-    private func getOrCreateKey(context: Authentication) -> SymmetricKey {
+    private func getOrCreateKey(context: AuthenticationProtocol) -> SymmetricKey {
             if let existingKey = KeychainHelper.keychain.readKeyWithAutentication(authentication: context) {
                 return existingKey
             }
@@ -169,7 +169,7 @@ class EncryptionManager{
     ///   - input: Los datos a encriptar
     ///   - key: La clave a usar para encriptar
     /// - Returns: Los datos encriptados
-    private func encryptWithExistingKey(input: Data, context: Authentication)  -> Data {
+    private func encryptWithExistingKey(input: Data, context: AuthenticationProtocol)  -> Data {
         do {
             // vemos si tenemos clave
             let key = getOrCreateKey(context: context)

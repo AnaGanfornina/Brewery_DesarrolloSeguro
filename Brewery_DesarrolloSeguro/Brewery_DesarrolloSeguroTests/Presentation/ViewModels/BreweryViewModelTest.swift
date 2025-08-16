@@ -11,11 +11,34 @@ import XCTest
 
 final class BreweryViewModelTest: XCTestCase {
     var sut: BreweryViewModel!
+    var authenticationMock: AuthenticationMock!
+    let breweryTest = Brewery(
+        id: "1",
+        name: "Test Brewery",
+        breweryType: "TestType",
+        address1: nil,
+        address2: nil,
+        address3: nil,
+        city: "TestCity",
+        stateProvince: "TestProvince",
+        postalCode: "TestPostalColde",
+        country: "TestCountry",
+        longitude: nil,
+        latitude: nil,
+        phone: nil,
+        websiteURL: nil,
+        state: "TestState",
+        street: nil
+    )
     
     override func setUpWithError() throws {
         try super.setUpWithError()
+        authenticationMock = AuthenticationMock()
         KeychainHelper.keychain.deleteBrewery()
-        sut = BreweryViewModel(useCase: BreweriesUseCaseMock())
+        sut = BreweryViewModel(useCase: BreweriesUseCaseMock(),
+                               authentication: authenticationMock)
+        
+        
     }
     
     override func tearDownWithError() throws {
@@ -25,44 +48,57 @@ final class BreweryViewModelTest: XCTestCase {
     
     func test_getBreweries() async throws {
         
+        // When: llamamos a la función async
+        await sut.getBreweries()
+        
+        // Then: comprobamos el resultado
+        XCTAssertEqual(sut.beweryData.count, 2)
+        let brewery = try XCTUnwrap(sut.beweryData.first)
+        XCTAssertEqual(brewery.name, "Bière de la Plaine Mock")
+        
+        let secondBrewery = try XCTUnwrap(sut.beweryData.last)
+        XCTAssertEqual(secondBrewery.name, "La Minotte Mock")
+        
+    }
+    
+    func test_AddFavorite_WithSuccessfulAuth() {
         // Given
-        // Usamod una expectation para esperar a que nos informe de los cambios de estado el viewModel
-        
-        var expectedBreweries: [Brewery] = []
-        
-        
+        authenticationMock.simulateSuccess()
+        let expectation = XCTestExpectation(description: "Favorite added")
         
         // When
+        sut.addFavorite(breweryTest)
         
-        let expectation = expectation(description: "ViewModel load brewery and inform")
-        
-        Task{
-            while sut.beweryData.isEmpty {
-                try? await Task.sleep(nanoseconds: 50_000_000) // 0.05s
-            }
-            expectedBreweries = sut.beweryData
+        // Then
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            XCTAssertEqual(self.authenticationMock.authenticateUserCallCount, 1)
+            XCTAssertFalse(self.sut.showAlertFavorite)
             expectation.fulfill()
         }
         
-        
-        
-        // Then
-        
         wait(for: [expectation], timeout: 1.0)
-        
-        // Como sabemos que el mock devuelve dos breweries
-        XCTAssertEqual(sut.beweryData.count, 2)
-        let brewery = try XCTUnwrap(sut.beweryData.first)
-        let breweryExpected = try XCTUnwrap(expectedBreweries.first)
-        
-        XCTAssertEqual(brewery.id, breweryExpected.id)
-        
-        
-        // Podemos comprobar datos concretos si queremos
-        XCTAssertEqual(sut.beweryData[0].name, "Bière de la Plaine Mock")
-        XCTAssertEqual(sut.beweryData[1].name,  "La Minotte Mock")
-        
     }
+    
+    func testAddFavoriteWithFailedAuth(){
+        // Given
+        authenticationMock.simulateFailure()
+        let expectation = XCTestExpectation(description: "Test BreweryFailed Authentication")
+
+        // When
+        sut.addFavorite(breweryTest)
+
+        // Then
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1){
+            XCTAssertEqual(self.authenticationMock.authenticateUserCallCount, 1)
+            XCTAssertTrue(self.sut.showAlertFavorite)
+            expectation.fulfill()
+            
+        }
+        wait(for: [expectation], timeout: 1.0)
+
+    }
+    
+    
     
     
     

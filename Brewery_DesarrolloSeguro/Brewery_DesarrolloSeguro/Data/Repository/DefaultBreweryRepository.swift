@@ -23,7 +23,8 @@ final class BreweryRepository: BreweryRepositoryProtocol {
         if KeychainHelper.keychain.readBreweryes() == nil{
             
             let data = await network.getBreweries()
-            KeychainHelper.keychain.saveBreweryes(data)
+        
+            KeychainHelper.keychain.saveBreweryes(data.map{ $0.mapToBrewery()})
             
         }
         // Leer los datos de keychain
@@ -80,7 +81,7 @@ final class BreweryRepositoryMock: BreweryRepositoryProtocol {
         if KeychainHelper.keychain.readBreweryes() == nil{
             
             let data = await network.getBreweries()
-            KeychainHelper.keychain.saveBreweryes(data)
+            KeychainHelper.keychain.saveBreweryes(data.map{ $0.mapToBrewery()})
             
         }
         // Leer los datos de keychain

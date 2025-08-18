@@ -25,17 +25,20 @@ struct Brewery: Codable, Identifiable {
     let websiteURL: String?
     let state: String
     let street: String?
-
-
-    enum CodingKeys: String, CodingKey {
-        case id, name, city, country, longitude, latitude, phone, state, street
-        case breweryType = "brewery_type"
-        case address1 = "address_1"
-        case address2 = "address_2"
-        case address3 = "address_3"
-        case stateProvince = "state_province"
-        case postalCode = "postal_code"
-        case websiteURL = "website_url"
+    
+    
+    // propiedad computada para obtener la imagen según el tipo
+    var defaultImageName: String {
+        switch breweryType.lowercased() {
+        case "contract": return "contract_brewery"
+        case "large": return "LargeBrewery"
+        case "micro": return "MicroBrewery"
+        case "propietor": return "PropietorBrewery"
+        case "brewpub": return "Brewpub"
+        case "closed": return "closedBrewery"
+        default: return "brewpub_brewery" // imagen por defecto
+        }
+       
     }
+    
 }
-

@@ -8,13 +8,13 @@
 import Foundation
 
 protocol NetworkBreweriesProtocol {
-    func getBreweries() async ->[Brewery]
+    func getBreweries() async ->[BreweryDTO]
 }
 
 final class NetworkBreweries: NetworkBreweriesProtocol{
     
-    func getBreweries() async -> [Brewery] {
-        var modelReturn = [Brewery]()
+    func getBreweries() async -> [BreweryDTO] {
+        var modelReturn = [BreweryDTO]()
         
         guard let urlCad = String(data: Data(ConstantsApp.CONST_API_URL), encoding: .utf8) else {
             print("NetworkBreweries Error: unwrappederror CONST_API_URL")
@@ -34,7 +34,7 @@ final class NetworkBreweries: NetworkBreweriesProtocol{
             let (data, response) = try await URLSession.shared.data(for: request) //TODO: Cambiar por el share nuestro
             if let resp = response as? HTTPURLResponse {
                 if resp.statusCode == HttpResponseCodes.SUCCESS {
-                    modelReturn = try! JSONDecoder().decode([Brewery].self, from: data)
+                    modelReturn = try! JSONDecoder().decode([BreweryDTO].self, from: data)
                 }
             }
         } catch {
@@ -47,8 +47,8 @@ final class NetworkBreweries: NetworkBreweriesProtocol{
 // MARK: - NetworkBreweries Mock
 
 final class NetworkBreweriesMock: NetworkBreweriesProtocol{
-    func getBreweries() async -> [Brewery] {
-        let model1 = Brewery(
+    func getBreweries() async -> [BreweryDTO] {
+        let model1 = BreweryDTO(
             id: "701239cb-5319-4d2e-92c1-129ab0b3b440",
             name: "Bière de la Plaine Mock",
             breweryType: "micro",
@@ -66,7 +66,7 @@ final class NetworkBreweriesMock: NetworkBreweriesProtocol{
             state: "Bouche du Rhône",
             street: "16 Rue Saint Pierre")
         
-        let model2 = Brewery(
+        let model2 = BreweryDTO(
             id: "ac41870a-13d1-446c-80e4-6cb4570f5fbb",
             name: "La Minotte Mock",
             breweryType: "micro",

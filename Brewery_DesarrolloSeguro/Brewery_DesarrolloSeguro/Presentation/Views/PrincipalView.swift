@@ -22,14 +22,14 @@ struct PrincipalView: View {
         Group{
             if let viewModel = viewModel{
                 TabView{
-                    BreweriesView(viewModel: .constant(viewModel))
+                    BreweriesView(viewModel: viewModel)
                         .background(Color.cream)
                         .tabItem {
                             Image(systemName: "house")
                             Text("Home")
                         }
                     
-                    PrincipalFavoritesView(viewModel: .constant(viewModel))
+                    PrincipalFavoritesView(viewModel: viewModel)
                         .tabItem {
                             Image(systemName: "heart.fill")
                             Text("Favorites")

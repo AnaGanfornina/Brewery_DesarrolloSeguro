@@ -31,13 +31,7 @@ final class BreweryViewModel{
         self.useCase = useCase
         self.authentication = authentication
         EncryptionManager.shared.configure(context: authentication)
-        // Configurar EncryptionManager si es la implementación real
-        /*
-        if let realAuth = authentication as? Authentication {
-            EncryptionManager.shared.configure(context: realAuth.context)
-        }
-         */
-      
+
     }
     
     // MARK: - Session Management
@@ -100,6 +94,7 @@ final class BreweryViewModel{
         
     }
     
+
     func addFavorite(_ brewery: Brewery){
         
         if let key = keyAuthentication {
@@ -118,7 +113,12 @@ final class BreweryViewModel{
                             self.getFavoriteBreweries()
                         }
                     } else {
-                        self.showAlertFavorite = true
+                        // Actualización de la UI en el hilo principal
+                        
+                        DispatchQueue.main.async {
+                            self.showAlertFavorite = true
+                        }
+                        
                     }
                 }
             }
@@ -133,6 +133,32 @@ final class BreweryViewModel{
     func getFavoriteBreweries() {
         self.favoritesBeweryes = useCase.getFavoriteBreweries()
     }
+    
+    /// Método público para mostrar/ocultar alert de favoritos
+    func toggleFavoriteAlert() {
+        showAlertFavorite.toggle()
+    }
+    
+    /// Método público para ocultar alert de favoritos
+    func dismissFavoriteAlert() {
+        showAlertFavorite = false
+    }
+    
+    /// Método público para verificar si una cervecería es favorita
+    func isFavorite(_ brewery: Brewery) -> Bool {
+            return favoritesBeweryes.contains(where: { $0.id == brewery.id })
+        }
+    
+    /// Método público para toggle favorito (añadir/quitar)
+        func toggleFavorite(_ brewery: Brewery) {
+            if isFavorite(brewery) {
+                deleteFavorite(brewery)
+                AppLogger.debug("Info: eliminado de favorito desde Detalle")
+            } else {
+                addFavorite(brewery)
+                AppLogger.debug("Info: es favorito desde Detalle")
+            }
+        }
     
     // MARK: - Private Methods
     
@@ -172,7 +198,10 @@ final class BreweryViewModel{
                 self.keyAuthentication = KeychainHelper.keychain.readKeyWithAutentication(authentication: self.authentication)
             } else {
                 // Si falla autenticación, marcamos alerta
-                self.showAlertFavorite = true
+                // Actualización de la UI en el hilo principal
+                DispatchQueue.main.async {
+                    self.showAlertFavorite = true
+                }
             }
         }
     }

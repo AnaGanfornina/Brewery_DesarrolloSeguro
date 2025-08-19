@@ -10,7 +10,7 @@ import SwiftUI
 struct PrincipalFavoritesView: View {
     
     @Environment(AppState.self) var appState
-    @Binding var viewModel: BreweryViewModel
+    let viewModel: BreweryViewModel
     
     
     // Estado local para el diálogo
@@ -24,9 +24,9 @@ struct PrincipalFavoritesView: View {
             Group{
                 
                 if viewModel.keyAuthentication == nil {
-                    GetStarted(viewModel: $viewModel)
+                    GetStarted(viewModel: viewModel)
                 } else {
-                    FavoritesView(viewModel: $viewModel)
+                    FavoritesView(viewModel: viewModel)
                 }
             }
             .toolbar{
@@ -64,7 +64,7 @@ struct PrincipalFavoritesView: View {
 }
 
 #Preview {
-    PrincipalFavoritesView(viewModel: .constant(BreweryViewModel(useCase: BreweriesUseCaseMock(),
-                                                                 authentication: Authentication(context: AppState().authenticationContext))))
+    PrincipalFavoritesView(viewModel: BreweryViewModel(useCase: BreweriesUseCaseMock(),
+                                                                 authentication: Authentication(context: AppState().authenticationContext)))
         .environment(AppState())
 }

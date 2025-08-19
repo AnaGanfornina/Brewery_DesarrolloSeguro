@@ -10,7 +10,7 @@ import SwiftUI
 struct FavoritesView: View {
     @Environment(AppState.self) var appState
     @State var brewerySelected: Brewery?
-    @Binding var viewModel: BreweryViewModel
+    let viewModel: BreweryViewModel
     var body: some View {
         
         if viewModel.favoritesBeweryes.isEmpty {
@@ -51,7 +51,7 @@ struct FavoritesView: View {
             
             // Modal
             .sheet(item: $brewerySelected) { brewery in
-                BrewerieDetail(viewModel: $viewModel, brewerySelected: brewery)
+                BrewerieDetail(viewModel: viewModel, brewerySelected: brewery)
             }
             .onAppear {
                 viewModel.getFavoriteBreweries()
@@ -65,8 +65,8 @@ struct FavoritesView: View {
 
 #Preview {
     
-    FavoritesView(viewModel: .constant(BreweryViewModel(useCase: BreweriesUseCaseMock(),
-                                                        authentication: Authentication(context: AppState().authenticationContext))))
+    FavoritesView(viewModel: BreweryViewModel(useCase: BreweriesUseCaseMock(),
+                                                        authentication: Authentication(context: AppState().authenticationContext)))
         .environment(AppState())
     
     

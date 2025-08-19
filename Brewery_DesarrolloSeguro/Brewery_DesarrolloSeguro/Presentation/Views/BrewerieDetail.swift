@@ -4,12 +4,12 @@ import MapKit
 struct BrewerieDetail: View {
     @State private var cameraPosition: MapCameraPosition
     
-    @Binding var viewModel: BreweryViewModel
+    var viewModel: BreweryViewModel
     
     var brewerySelected: Brewery
     
-    init(viewModel: Binding<BreweryViewModel>, brewerySelected: Brewery) {
-        self._viewModel = viewModel
+    init(viewModel: BreweryViewModel, brewerySelected: Brewery) {
+        self.viewModel = viewModel
         self.brewerySelected = brewerySelected
         
         let latitude = brewerySelected.latitude ?? 0.0
@@ -82,21 +82,9 @@ struct BrewerieDetail: View {
                     .padding()
                 
                 Button {
-                    if viewModel.showAlertFavorite{
-                        viewModel.showAlertFavorite.toggle()
-                    }else {
-                        
-                        
-                        withAnimation(.spring()) {
-                            if viewModel.favoritesBeweryes.contains(where: { $0.id == brewerySelected.id }) {
-                                viewModel.deleteFavorite(brewerySelected)
-                                AppLogger.debug("Info: es favorito desde Detalle")
-                            } else {
-                                viewModel.addFavorite(brewerySelected)
-                                AppLogger.debug("Info: eliminado de favorito desde Detalle")
-                            }
-                        }
-                    }
+                    viewModel.toggleFavorite(brewerySelected)
+                    
+        
                 } label: {
                     Image(systemName: viewModel.favoritesBeweryes.contains(where: { $0.id == brewerySelected.id }) ? "heart.fill" : "heart")
                         .resizable()
@@ -105,19 +93,21 @@ struct BrewerieDetail: View {
                         .shadow(color: .black.opacity(0.4), radius: 3, x: 2, y: 2)
                         .tint(.greenBrewery)
                 }
-                .alert(isPresented: $viewModel.showAlertFavorite){
-                    Alert(
-                        title: Text("Aviso al usuario"),
-                        message: Text("Debe logearse para poder guardar sus favoritos"),
-                        dismissButton: .default(Text("Aceptar")) {
-                            viewModel.showAlertFavorite = false
-                            
-                        }
-                    )
-                }
-            }//VStack
+                .alert(isPresented: Binding(
+                                // Hacemos un binding manual ya que el vm puede ser opcional
+                                    get: { viewModel.showAlertFavorite },
+                                    set: { _ in viewModel.dismissFavoriteAlert() }
+                                )) {
+                                    Alert(
+                                        title: Text("Aviso al usuario"),
+                                        message: Text("Debe logearse para poder guardar sus favoritos"),
+                                        dismissButton: .default(Text("Aceptar")) {
+                                            viewModel.dismissFavoriteAlert()
+                                        }
+                                    )
+                                }            }
             .padding(.horizontal)
-        }//ZStack
+        }
     }
     
     private func coordinatesAvailable() -> Bool {
@@ -130,8 +120,8 @@ struct BrewerieDetail: View {
 
 #Preview {
     BrewerieDetail(
-        viewModel: .constant(BreweryViewModel(useCase: BreweriesUseCaseMock(),
-                                              authentication: Authentication(context: AppState().authenticationContext))),
+        viewModel: BreweryViewModel(useCase: BreweriesUseCaseMock(),
+                                              authentication: Authentication(context: AppState().authenticationContext)),
         brewerySelected: Brewery(
             id: "701239cb-5319-4d2e-92c1-129ab0b3b440",
             name: "Bière de la Plaine Mock",

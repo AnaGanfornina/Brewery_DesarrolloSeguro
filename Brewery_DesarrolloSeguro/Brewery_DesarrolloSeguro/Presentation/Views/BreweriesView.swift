@@ -10,7 +10,7 @@ import SwiftUI
 struct BreweriesView: View {
     @Environment(AppState.self) var appState
     
-    @Binding var viewModel: BreweryViewModel
+    let viewModel: BreweryViewModel
     @State var brewerySelected: Brewery?
     
     // Estado local para el diálogo
@@ -68,16 +68,19 @@ struct BreweriesView: View {
                 //.background(.clear)
                 
                 
-                .alert(isPresented: $viewModel.showAlertFavorite){
-                    Alert(
-                        title: Text("Aviso al usuario"),
-                        message: Text("Debe logearse para poder guardar sus favoritos"),
-                        dismissButton: .default(Text("Aceptar")) {
-                            viewModel.showAlertFavorite = false
-                            
-                        }
-                    )
-                }
+                .alert(isPresented: Binding(
+                                    // Hacemos un binding manual ya que el vm puede ser opcional
+                                    get: { viewModel.showAlertFavorite },
+                                    set: { _ in viewModel.dismissFavoriteAlert() }
+                                )) {
+                                    Alert(
+                                        title: Text("Aviso al usuario"),
+                                        message: Text("Debe logearse para poder guardar sus favoritos"),
+                                        dismissButton: .default(Text("Aceptar")) {
+                                            viewModel.dismissFavoriteAlert()
+                                        }
+                                    )
+                                }
                 .confirmationDialog("Aviso al usuario", isPresented:  $showLogoutDialog) {
                     Button("Sí, borrar", role: .destructive) {
                         appState.closeSessionUserAndEraseCredentials()
@@ -112,40 +115,25 @@ struct BreweriesView: View {
         }
         // Modal
         .sheet(item: $brewerySelected) { brewery in
-            BrewerieDetail(viewModel: $viewModel, brewerySelected: brewery)
+            BrewerieDetail(viewModel: viewModel, brewerySelected: brewery)
         }
       
     }//Navigation
 }
 
-
 #Preview {
     let appState = AppState()
     let viewModel = BreweryViewModel(
         useCase: BreweriesUseCaseMock(),
-        authentication: AuthenticationMock()
+        authentication: Authentication(context: appState.authenticationContext)
     )
-    
-    viewModel.beweryData = [
-        Brewery(id: "1", name: "Mock Brewery", breweryType: "micro",
-                address1: "Fake street", address2: nil, address3: nil,
-                city: "Sevilla", stateProvince: "Andalucía", postalCode: "41001",
-                country: "España", longitude: 0, latitude: 0,
-                phone: "123456789", websiteURL: "https://example.com",
-                state: "Andalucía", street: "Fake street 1"),
-        
-        Brewery(id: "2", name: "Mock Brewery", breweryType: "micro",
-                address1: "Fake street", address2: nil, address3: nil,
-                city: "Sevilla", stateProvince: "Andalucía", postalCode: "41001",
-                country: "España", longitude: 0, latitude: 0,
-                phone: "123456789", websiteURL: "https://example.com",
-                state: "Andalucía", street: "Fake street 1")
-        
-    ]
-    
-    return BreweriesView(viewModel: .constant(viewModel))
+
+    return BreweriesView(viewModel: viewModel)
         .environment(appState)
 }
+    
+    
+
 
 
 

@@ -32,7 +32,7 @@ struct BrewerieDetail: View {
             Image("FondoDetail")
                 .resizable()
                 .ignoresSafeArea()
-                .background(Color.green.opacity(0.4))
+               
             
             VStack {
                 Spacer().frame(height: 70)
@@ -115,9 +115,9 @@ struct BrewerieDetail: View {
                         }
                     )
                 }
-            }
+            }//VStack
             .padding(.horizontal)
-        }
+        }//ZStack
     }
     
     private func coordinatesAvailable() -> Bool {

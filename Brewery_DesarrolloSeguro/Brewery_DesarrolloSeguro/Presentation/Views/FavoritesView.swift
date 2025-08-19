@@ -23,7 +23,16 @@ struct FavoritesView: View {
                
             List{
                 ForEach(viewModel.favoritesBeweryes){ favorite in
-                    Text(favorite.name)
+                    BreweryRowView(brewery: favorite)
+                    //.background(Color.cream) // Fondo color crema
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(Color.greenBrewery, lineWidth: 1)
+                        )
+                    //.baackground(Color.greenBrewery.opacity(0.1))
+                        .listRowBackground(Color.clear) // Elimina el fondo por defecto de la celda
+                        .listRowInsets(EdgeInsets(top: 4, leading: 4, bottom: 4, trailing: 0.5))
+                        .listRowSeparator(.hidden) // Oculta los separadores por defecto
                         .onTapGesture {
                             // Destination
                             brewerySelected = favorite
@@ -38,6 +47,7 @@ struct FavoritesView: View {
                         }
                 }// ForEach
             }// List
+            
             
             // Modal
             .sheet(item: $brewerySelected) { brewery in

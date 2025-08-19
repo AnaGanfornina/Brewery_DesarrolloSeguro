@@ -23,6 +23,7 @@ struct PrincipalView: View {
             if let viewModel = viewModel{
                 TabView{
                     BreweriesView(viewModel: .constant(viewModel))
+                        .background(Color.cream)
                         .tabItem {
                             Image(systemName: "house")
                             Text("Home")

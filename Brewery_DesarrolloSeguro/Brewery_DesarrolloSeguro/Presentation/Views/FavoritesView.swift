@@ -47,6 +47,8 @@ struct FavoritesView: View {
                         }
                 }// ForEach
             }// List
+            .navigationTitle(Text("Favorites"))
+            .navigationBarTitleDisplayMode(.automatic)
             
             
             // Modal

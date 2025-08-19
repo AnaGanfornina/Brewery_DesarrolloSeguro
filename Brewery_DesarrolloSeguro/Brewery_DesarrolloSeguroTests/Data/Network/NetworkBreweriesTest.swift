@@ -25,7 +25,7 @@ final class NetworkBreweriesTest: XCTestCase {
     func test_getBreweries() async throws {
         
         // Given
-        var expectedBreweries:[Brewery] = []
+        var expectedBreweries:[BreweryDTO] = []
         
         // When
         expectedBreweries = await sut.getBreweries()

@@ -11,7 +11,8 @@ import SwiftUI
 struct Brewery_DesarrolloSeguroApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RootView()
+                .environment(AppState())
         }
     }
 }
